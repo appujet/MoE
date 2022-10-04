@@ -1,20 +1,21 @@
 {
-  "name": "multipurpose",
+  "name": "alpha",
   "version": "1.0.0",
   "description": "this is a advanced discord multipurpose bot made by blacky",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js"
   },
-"repository": {
+  "repository": {
     "type": "git",
-    "url": "git+https://github.com/brblacky/discord-multipurpose-bot+git"
+    "url": "git+https://github.com/brblacky/alpha+git"
   },
   "keywords": [
     "lavalink",
-    "erela",
     "music",
     "bot",
+    "multipurpose",
     "discord-music",
     "discord",
     "musicbot",
@@ -22,8 +23,8 @@
     "music-bot-discord",
     "discord.js-v14"
   ],
-"bugs": "https://github.com/brblacky/discord-multipurpose-bot//issues",
-  "homepage": "https://github.com/brblacky/discord-multipurpose-bot/#readme",
+  "bugs": "https://github.com/brblacky/alpha/issues",
+  "homepage": "https://github.com/brblacky/alpha/#readme",
   "author": "blacky",
   "license": "ISC",
   "dependencies": {
