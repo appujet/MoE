@@ -6,6 +6,24 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+"repository": {
+    "type": "git",
+    "url": "git+https://github.com/brblacky/discord-multipurpose-bot+git"
+  },
+  "keywords": [
+    "lavalink",
+    "erela",
+    "music",
+    "bot",
+    "discord-music",
+    "discord",
+    "musicbot",
+    "music-bot",
+    "music-bot-discord",
+    "discord.js-v14"
+  ],
+"bugs": "https://github.com/brblacky/discord-multipurpose-bot//issues",
+  "homepage": "https://github.com/brblacky/discord-multipurpose-bot/#readme",
   "author": "blacky",
   "license": "ISC",
   "dependencies": {
