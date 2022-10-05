@@ -1,7 +1,16 @@
 {
-    "extends": "tesseract",
-    "rules": {
-        "no-empty-function": "off",
-        "max-len": "off"
-    }
+  "extends": "tesseract",
+  "rules": {
+      "no-empty-function": "off",
+      "max-len": "off",
+      "no-unused-vars": "off",
+      "new-cap": "off",
+      "no-inline-comments": "off",
+      "camelcase": "off",
+      "id-length": "off",
+      "valid-jsdoc": "off",
+      "consistent-return": "off",
+      "no-useless-constructor": "off",
+      "max-depth": "off"
+  }
 }

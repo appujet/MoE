@@ -12,75 +12,77 @@
  */
 
 module.exports = class Command {
-  /**
+
+	/**
    *
-   * @param {import('@structures/Client')} client
-   * @param {CommandOptions} options
+   * @param {import('@structures/Client')} client Extended Client
+   * @param {CommandOptions} options Passed in command options
    */
-  constructor(client, options) {
-    /**
+	constructor(client, options) {
+		/**
      * @type {import('@structures/Client')} Extended Client
      */
-    this.client = client;
-    /**
+		this.client = client;
+		/**
      * @type {string}
      */
-    this.name = options.name;
-    /**
+		this.name = options.name;
+		/**
      * @type {{ content: string; usage: string; examples: Array<string>}}
      */
-    this.description = {
-      content: options.description
-        ? options.description.content || "No description provided"
-        : "No description provided",
-      usage: options.description
-        ? options.description.usage || "No usage provided"
-        : "No usage provided",
-      examples: options.description
-        ? options.description.examples || "No examples provided"
-        : "No examples provided",
-    };
-    /**
+		this.description = {
+			content: options.description ?
+				options.description.content || 'No description provided' :
+				'No description provided',
+			usage: options.description ?
+				options.description.usage || 'No usage provided' :
+				'No usage provided',
+			examples: options.description ?
+				options.description.examples || 'No examples provided' :
+				'No examples provided'
+		};
+		/**
      * @type {?Array<string>}
      */
-    this.aliases = options.aliases || "N/A";
-    /**
+		this.aliases = options.aliases || 'N/A';
+		/**
      * @type {?number}
      */
-    this.cooldown = options.cooldown || 3;
-    /**
+		this.cooldown = options.cooldown || 3;
+		/**
      * @type {?{ voice: boolean; dj: boolean; active: boolean; djPerm: any }}
      */
-    this.player = {
-      voice: options.player ? options.player.voice || false : false,
-      dj: options.player ? options.player.dj || false : false,
-      active: options.player ? options.player.active || false : false,
-      djPerm: options.player ? options.player.djPerm || null : null,
-    };
-    /**
+		this.player = {
+			voice: options.player ? options.player.voice || false : false,
+			dj: options.player ? options.player.dj || false : false,
+			active: options.player ? options.player.active || false : false,
+			djPerm: options.player ? options.player.djPerm || null : null
+		};
+		/**
      * @type {?{ dev: boolean; client: import('discord.js').PermissionResolvable; user: import('discord.js').PermissionResolvable; voteRequired: boolean; }}
      */
-    this.permissions = {
-      dev: options.permissions ? options.permissions.dev || false : false,
-      client: options.permissions
-        ? options.permissions.client || []
-        : ["SendMessages", "ViewChannel", "EmbedLinks"],
-      user: options.permissions ? options.permissions.user || [] : [],
-      voteRequired: options.permissions
-        ? options.permissions.voteRequired || false
-        : false,
-    };
-    /**
+		this.permissions = {
+			dev: options.permissions ? options.permissions.dev || false : false,
+			client: options.permissions ?
+				options.permissions.client || [] :
+				['SendMessages', 'ViewChannel', 'EmbedLinks'],
+			user: options.permissions ? options.permissions.user || [] : [],
+			voteRequired: options.permissions ?
+				options.permissions.voteRequired || false :
+				false
+		};
+		/**
      * @type {?boolean}
      */
-    this.slashCommand = options.slashCommand || false;
-    /**
+		this.slashCommand = options.slashCommand || false;
+		/**
      * @type {?import('discord.js').ApplicationCommandOption}
      */
-    this.options = options.options || [];
-    /**
+		this.options = options.options || [];
+		/**
      * @type {?string}
      */
-    this.category = options.category || "general";
-  }
+		this.category = options.category || 'general';
+	}
+
 };

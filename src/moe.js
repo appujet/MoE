@@ -1,4 +1,4 @@
-const Client = require("./structures/Client");
+const Client = require('./structures/Client');
 
 const client = new Client();
 
@@ -6,12 +6,12 @@ client.connect();
 
 module.exports = client;
 
-process.on("uncaughtException", (e) => {
-  client.logger.error(e);
+process.on('uncaughtException', (error) => {
+	client.logger.error(error);
 });
-process.on("unhandledRejection", (e) => {
-  client.logger.error(e);
+process.on('unhandledRejection', (error) => {
+	client.logger.error(error);
 });
-process.on("warning", (e) => {
-  client.logger.error(e);
+process.on('warning', (warn) => {
+	client.logger.error(warn);
 });
