@@ -1,8 +1,17 @@
-const { Message, CommandInteraction, EmbedBuilder } = require("discord.js");
+const {
+  Message,
+  CommandInteraction,
+  EmbedBuilder,
+  ChatInputCommandInteraction,
+  BaseInteraction,
+} = require("discord.js");
 
 module.exports = class Context {
   constructor(ctx, args) {
-    this.isInteraction = ctx instanceof CommandInteraction;
+    this.isInteraction =
+      ctx instanceof CommandInteraction ||
+      ctx instanceof ChatInputCommandInteraction ||
+      ctx instanceof BaseInteraction;
     this.ctx = ctx;
     this.setArgs(args);
     this.interaction = this.isInteraction ? ctx : null;
@@ -31,8 +40,8 @@ module.exports = class Context {
   async sendMessage(content) {
     if (this.isInteraction) {
       this.msg = this.interaction.deferred
-        ? await this.followUp(content)
-        : await this.reply(content);
+        ? await this.interaction.followUp(content)
+        : await this.interaction.reply(content);
       return this.msg;
     } else {
       this.msg = this.message.channel.send(content);
@@ -41,7 +50,7 @@ module.exports = class Context {
   }
   async sendDeferMessage(content) {
     if (this.isInteraction) {
-      this.msg = await this.deferReply({ fetchReply: true });
+      this.msg = await this.interaction.deferReply({ fetchReply: true });
       return this.msg;
     } else {
       this.msg = await this.channel.send(content);
@@ -50,21 +59,21 @@ module.exports = class Context {
   }
   async sendFollowUp(content) {
     if (this.isInteraction) {
-      await this.followUp(content);
+      await this.interaction.followUp(content);
     } else {
       this.channel.send(content);
     }
   }
   editMessage(content) {
     if (this.isInteraction) {
-      return this.editReply(content);
+      return this.interaction.editReply(content);
     } else {
       return this.msg.edit(content);
     }
   }
   deleteMessage() {
     if (this.isInteraction) {
-      return this.deleteReply();
+      return this.interaction.deleteReply();
     } else {
       return this.msg.delete();
     }

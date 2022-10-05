@@ -40,6 +40,11 @@ module.exports = class Logger extends Signale {
           color: "green",
           label: "ready",
         },
+        command: {
+          badge: "🛠️",
+          color: "green",
+          label: "command",
+        },
       },
       scope: client
         ? `Shard ${("00" + client.shard.ids[0]).slice(-2)}`
