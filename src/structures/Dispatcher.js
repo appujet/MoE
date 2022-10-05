@@ -1,5 +1,5 @@
 const { Guild, TextChannel } = require('discord.js');
-const Moe = require('./Client');
+const Moe = require('@structures/Client');
 const { Player } = require('shoukaku');
 
 class Dispatcher {
