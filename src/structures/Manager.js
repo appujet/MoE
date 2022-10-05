@@ -1,7 +1,7 @@
 const { Collection, Guild, GuildMember, TextChannel } = require('discord.js');
 const { Shoukaku, Connectors, Node } = require('shoukaku');
-const Moe = require('./Client');
-const Dispatcher = require('./Dispatcher');
+const Moe = require('@structures/Client');
+const Dispatcher = require('@structures/Dispatcher');
 
 class Manager {
 
