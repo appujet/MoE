@@ -11,12 +11,14 @@ const {
   EmbedBuilder,
   ButtonBuilder,
   SelectMenuBuilder,
+  ContextMenuCommandBuilder,
 } = require("discord.js");
 const { connect } = require("mongoose");
 const { readdirSync } = require("node:fs");
 const Logger = require("./Logger");
 const Cluster = require("discord-hybrid-sharding");
 const Manager = require("./Manager");
+const Command = require("./Command");
 
 module.exports = class Moe extends Client {
   constructor() {
@@ -52,16 +54,37 @@ module.exports = class Moe extends Client {
       ],
       restTimeOffset: 0,
     });
+    /**
+     * @type {Collection<string, Command>}
+     */
     this.commands = new Collection();
     this.config = require("../config");
+    /**
+     * @type {Collection<string, Command>}
+     */
     this.aliases = new Collection();
+    /**
+     * @type {Collection<string, ContextMenuCommandBuilder>}
+     */
     this.contextMenus = new Collection();
+    /**
+     * @type {Collection<string, Date>}
+     */
     this.cooldowns = new Collection();
+    /**
+     * @type {import('discord-hybrid-sharding').Cluster;}
+     */
     this.cluster = new Cluster.Client(this);
+    /**
+     * @type {Logger}
+     */
     this.logger = new Logger({
       displayTimestamp: true,
       displayDate: true,
     });
+    /**
+     * @type {Manager}
+     */
     this.manager = new Manager(this);
     this._connectMongodb();
   }
@@ -176,10 +199,19 @@ module.exports = class Moe extends Client {
     });
     this.logger.event(`Successfully loaded event ${i}.`);
   }
+
+  /**
+   * @private
+   */
   async _connectMongodb() {
     await connect(this.config.database);
     this.logger.ready("Successfully connected to MongoDB.");
   }
+
+  /**
+   * @public
+   * @returns {Promise<void>}
+   */
   async connect() {
     super.login(this.config.token);
     this._loadEvents();

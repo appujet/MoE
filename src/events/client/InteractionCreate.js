@@ -11,15 +11,12 @@ module.exports = class InteractionCreate extends Event {
     super(...args);
   }
   async run(interaction) {
-    let color = this.client.config.color ? this.client.config.color : "#59D893";
-
     if (interaction.type === InteractionType.ApplicationCommand) {
       const { commandName } = interaction;
       if (!commandName)
         return await interaction
           .reply({ content: "Unknow interaction!" })
           .catch(() => {});
-      const prefix = this.client.config.prefix;
       let cmd = this.client.commands.get(interaction.commandName);
       if (!cmd || !cmd.slashCommand) return;
       const command = cmd.name.toLowerCase();
@@ -196,7 +193,7 @@ module.exports = class InteractionCreate extends Event {
       }
 
       try {
-        return await cmd.run(this.client, ctx, ctx.args, prefix, color);
+        return await cmd.run(ctx);
       } catch (error) {
         console.error(error);
         await interaction

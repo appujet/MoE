@@ -1,4 +1,6 @@
+const Context = require("../../structures/Context");
 const Command = require("../../structures/Command");
+const { Message } = require("discord.js");
 
 module.exports = class Ping extends Command {
   constructor(client) {
@@ -27,13 +29,21 @@ module.exports = class Ping extends Command {
       slashCommand: true,
     });
   }
-  async run(client, ctx, args) {
+  /**
+   *
+   * @param {Context} ctx
+   * @returns {Promise<Message>}
+   */
+  async run(ctx) {
+    /**
+     * @type {Message}
+     */
     const msg = await ctx.sendDeferMessage(`Pinging...`);
 
-    return ctx.editMessage(
+    return await ctx.editMessage(
       `Latency: \`${
         msg.createdTimestamp - ctx.createdTimestamp
-      }ms.\` \nAPI Latency: \`${Math.round(client.ws.ping)}ms.\``
+      }ms.\` \nAPI Latency: \`${Math.round(ctx.client.ws.ping)}ms.\``
     );
   }
 };

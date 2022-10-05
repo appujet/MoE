@@ -22,7 +22,13 @@ module.exports = class Command {
      * @type {import('@structures/Client')} Extended Client
      */
     this.client = client;
+    /**
+     * @type {string}
+     */
     this.name = options.name;
+    /**
+     * @type {{ content: string; usage: string; examples: Array<string>}}
+     */
     this.description = {
       content: options.description
         ? options.description.content || "No description provided"
@@ -34,14 +40,26 @@ module.exports = class Command {
         ? options.description.examples || "No examples provided"
         : "No examples provided",
     };
+    /**
+     * @type {?Array<string>}
+     */
     this.aliases = options.aliases || "N/A";
+    /**
+     * @type {?number}
+     */
     this.cooldown = options.cooldown || 3;
+    /**
+     * @type {?{ voice: boolean; dj: boolean; active: boolean; djPerm: any }}
+     */
     this.player = {
       voice: options.player ? options.player.voice || false : false,
       dj: options.player ? options.player.dj || false : false,
       active: options.player ? options.player.active || false : false,
       djPerm: options.player ? options.player.djPerm || null : null,
     };
+    /**
+     * @type {?{ dev: boolean; client: import('discord.js').PermissionResolvable; user: import('discord.js').PermissionResolvable; voteRequired: boolean; }}
+     */
     this.permissions = {
       dev: options.permissions ? options.permissions.dev || false : false,
       client: options.permissions
@@ -52,8 +70,17 @@ module.exports = class Command {
         ? options.permissions.voteRequired || false
         : false,
     };
+    /**
+     * @type {?boolean}
+     */
     this.slashCommand = options.slashCommand || false;
+    /**
+     * @type {?import('discord.js').ApplicationCommandOption}
+     */
     this.options = options.options || [];
+    /**
+     * @type {?string}
+     */
     this.category = options.category || "general";
   }
 };

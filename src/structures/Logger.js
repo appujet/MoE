@@ -1,6 +1,12 @@
 const { Signale } = require("signale");
+const Moe = require("./Client");
 
 module.exports = class Logger extends Signale {
+  /**
+   *
+   * @param {import("signale").SignaleConfig} config
+   * @param {Moe} client
+   */
   constructor(config, client) {
     super({
       config: config,

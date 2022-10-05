@@ -15,11 +15,6 @@ module.exports = class MessageCreate extends Event {
     if (message.author.bot || message.channel.type === ChannelType.DM) return;
     if (message.partial) await message.fetch();
 
-    const prefix = this.client.config.prefix;
-    const color = this.client.config.color
-      ? this.client.config.color
-      : "#59D893";
-
     const ctx = new Context(message);
 
     const mention = new RegExp(`^<@!?${this.client.user.id}>( |)$`);
@@ -186,7 +181,7 @@ module.exports = class MessageCreate extends Event {
     }
 
     try {
-      return await command.run(this.client, ctx, ctx.args, prefix, color);
+      return await command.run(ctx);
     } catch (error) {
       await message.channel
         .send({

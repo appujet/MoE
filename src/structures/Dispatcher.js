@@ -3,6 +3,13 @@ const Moe = require("./Client");
 const { Player } = require("shoukaku");
 
 class Dispatcher {
+  /**
+   *
+   * @param {Moe} client
+   * @param {Guild} guild
+   * @param {TextChannel} channel
+   * @param {Player} player
+   */
   constructor(client, guild, channel, player) {
     /**
      * @type {Moe}
@@ -84,6 +91,10 @@ class Dispatcher {
     return this.client.manager;
   }
 
+  /**
+   *
+   * @param {Error} data
+   */
   _errorHandler(data) {
     if (data instanceof Error || data instanceof Object)
       this.client.logger.error(data);
@@ -95,6 +106,10 @@ class Dispatcher {
     return this.manager.players.has(this.guild.id);
   }
 
+  /**
+   *
+   * @returns {void}
+   */
   play() {
     if (this.introId && this.current === this.introId) {
       this.player.playTrack({
@@ -110,6 +125,11 @@ class Dispatcher {
     this.player.playTrack({ track: this.current.track });
   }
 
+  /**
+   *
+   * @param {?string} reason
+   * @returns {void}
+   */
   destroy(reason) {
     this.queue.length = 0;
     this.player.connection.disconnect();
@@ -155,6 +175,9 @@ class Dispatcher {
       : null;
   }
 
+  /**
+   * @returns {void}
+   */
   check() {
     if (this.queue.length && !this.current && !this.player.paused) {
       this.play();

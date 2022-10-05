@@ -4,11 +4,18 @@ const Moe = require("./Client");
 const Dispatcher = require("./Dispatcher");
 
 class Manager {
+  /**
+   *
+   * @param {Moe} client
+   */
   constructor(client) {
     /**
      * @type {Moe}
      */
     this.client = client;
+    /**
+     * @type {Shoukaku}
+     */
     this.shoukaku = new Shoukaku(
       new Connectors.DiscordJS(this.client),
       this.client.config.nodes,
@@ -76,6 +83,7 @@ class Manager {
    * @param {GuildMember} member Member
    * @param {TextChannel} channel Channel
    * @param {Node} givenNode Node
+   * @returns {Promise<Dispatcher>}
    */
   async spawn(guild, member, channel, givenNode) {
     const existing = this.getPlayer(guild.id);
@@ -98,6 +106,11 @@ class Manager {
     return dispatcher;
   }
 
+  /**
+   *
+   * @param {string} query
+   * @returns {any}
+   */
   async search(query) {
     const node = await this.shoukaku.getNode();
 
@@ -109,7 +122,6 @@ class Manager {
         "Shoukaku Handler",
         `LAVALINK => Error while searching for ${query}`
       );
-      console.log(err);
       return null;
     }
 
