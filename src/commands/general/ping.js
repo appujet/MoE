@@ -27,9 +27,9 @@ module.exports = class Ping extends Command {
             slashCommand: true,
         });
     }
-    async run(client, ctx, args) { 
+    async run(ctx, args) { 
         const msg = await ctx.sendDeferMessage(`Pinging...`);
 
-        return ctx.editMessage(`Latency: \`${msg.createdTimestamp - ctx.createdTimestamp}ms.\` \nAPI Latency: \`${Math.round(client.ws.ping)}ms.\``);
+        return await ctx.editMessage(`Latency: \`${msg.createdTimestamp - ctx.createdTimestamp}ms.\` \nAPI Latency: \`${Math.round(ctx.client.ws.ping)}ms.\``);
     }
 }

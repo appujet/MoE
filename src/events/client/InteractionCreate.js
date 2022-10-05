@@ -19,7 +19,7 @@ module.exports = class InteractionCreate extends Event {
 
             const ctx = new Context(interaction, interaction.options.data);
 
-            this.client.logger.command('%s used by %s from %s', command, ctx.author.id, ctx.guild.id)
+            this.client.logger.cmd('%s used by %s from %s', command, ctx.author.id, ctx.guild.id)
             if (!interaction.inGuild() || !interaction.channel.permissionsFor(interaction.guild.members.me).has(PermissionFlagsBits.ViewChannel)) return;
 
             if (!interaction.guild.members.me.permissions.has(PermissionFlagsBits.SendMessages)) return await interaction.author?.send({ content: `I don't have **\`SEND_MESSAGES\`** permission in \`${interaction.guild.name}\`\nchannel: <#${interaction.channelId}>` }).catch(() => { });
@@ -71,7 +71,7 @@ module.exports = class InteractionCreate extends Event {
            
             try {
 
-                return await cmd.run(this.client, ctx, ctx.args, prefix, color);
+                return await cmd.run(ctx, ctx.args);
 
             } catch (error) {
                 console.error(error);

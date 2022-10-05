@@ -1,4 +1,5 @@
 const { Manager } = require("discord-hybrid-sharding");
+require("module-alias/register");
 const signale = require('signale');
 const { token } = require("@src/config");
 
@@ -8,7 +9,7 @@ signale.config({
   displayDate: false,
 });
 
-const manager = new Manager('./moe.js', {
+const manager = new Manager('./src/moe.js', {
   mode: "process",
   shardsPerClusters: 4,
   token,

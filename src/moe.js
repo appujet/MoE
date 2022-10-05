@@ -1,3 +1,4 @@
+require("module-alias/register");
 const Client = require('@structures/Client');
 
 const client = new Client();

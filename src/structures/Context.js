@@ -1,26 +1,81 @@
-const { Message, CommandInteraction, EmbedBuilder } = require('discord.js');
+const { Message, CommandInteraction, EmbedBuilder, User, BaseChannel, Guild, GuildMember, Interaction } = require('discord.js');
 
 module.exports = class Context {
     constructor(ctx, args) {
+        /**
+         * @type {boolean}
+         */
         this.isInteraction = ctx instanceof CommandInteraction;
+        /**
+         * @type {Message | CommandInteraction}
+         */
         this.ctx = ctx;
+        /**
+         * @type {void}
+         */
         this.setArgs(args);
+        /**
+         * @type {Interaction}
+         */
         this.interaction = this.isInteraction ? ctx : null;
+        /**
+         * @type {Message}
+         */
         this.message = this.isInteraction ? null : ctx;
+        /**
+         * @type {String}
+         */
         this.id = ctx.id;
+        /**
+        * @type {String}
+        */
         this.applicationId = ctx.applicationId;
+        /**
+        * @type {String}
+        */
         this.channelId = ctx.channelId;
+        /**
+        * @type {String}
+        */
         this.guildId = ctx.guildId;
+        /**
+        * @type {import('@structures/Client')}
+        */
         this.client = ctx.client;
+        /**
+         * @type {User}
+         */
         this.author = ctx instanceof Message ? ctx.author : ctx.user;
+        /**
+         * @type {BaseChannel}
+         */
         this.channel = ctx.channel;
+        /**
+         * @type {Guild}
+         */
         this.guild = ctx.guild;
+        /**
+         * @type {GuildMember}
+         */
         this.member = ctx.member;
+        /**
+         * @type {Date}
+         */
         this.createdAt = ctx.createdAt;
+        /**
+         * @type {Number}
+         */
         this.createdTimestamp = ctx.createdTimestamp;
+        /**
+         * @type {Collection<?string, import("discord.js").AttachmentData>}
+         */
         this.attachments = ctx.attachments;
     }
-
+    /**
+     * 
+     * @param {any} args 
+     * @returns {void}
+     */
     setArgs(args) {
         if (this.isInteraction) {
             this.args = args.map(arg => arg.value);
@@ -29,6 +84,11 @@ module.exports = class Context {
             this.args = args;
         }
     };
+    /**
+     * 
+     * @param {String} content 
+     * @returns {Promise<Message>}
+     */
     async sendMessage(content) {
         if (this.isInteraction) {
             this.msg = this.interaction.deferred ? await this.followUp(content) : await this.reply(content);
@@ -38,40 +98,66 @@ module.exports = class Context {
             return this.msg;
         }
     };
+    /**
+     * 
+     * @param {String} content 
+     * @returns {Promise<Message>}
+     */
     async sendDeferMessage(content) {
         if (this.isInteraction) {
-            this.msg = await this.deferReply({ fetchReply: true });
+            this.msg = await this.interaction.deferReply({ fetchReply: true });
             return this.msg;
         }
         else {
-            this.msg = await this.channel.send(content);
+            this.msg = await this.message.channel.send(content);
             return this.msg;
         }
     };
+    /**
+     * 
+     * @param {String} content 
+     * @returns {Promise<Message>}
+     */
     async sendFollowUp(content) {
         if (this.isInteraction) {
-            await this.followUp(content);
+            await this.interaction.followUp(content);
         }
         else {
-            this.channel.send(content);
+            this.message.channel.send(content);
         }
     };
-    editMessage(content) {
+    /**
+     * 
+     * @param {String} content 
+     * @returns {Promise<Message>}
+     */
+    async editMessage(content) {
         if (this.isInteraction) {
-            return this.editReply(content);
+            return await this.interaction.editReply(content);
         }
         else {
-            return this.msg.edit(content);
+            return await this.message.edit(content);
         }
     };
-    deleteMessage() {
+    /**
+     * 
+     * @returns {Promise<Message>}
+     */
+   async deleteMessage() {
         if (this.isInteraction) {
-            return this.deleteReply();
+            return await this.interaction.deleteReply();
         }
         else {
-            return this.msg.delete();
+            return await this.message.delete();
         }
     };
+    /**
+     * @param {string} commandName
+     * @param {Message} message
+     * @param {string[]} args
+     * @param {import('@structures/Client')} client
+     * @returns {Promise<void>}
+     */
     async invalidArgs(commandName, message, args, client) {
         try {
             let color = client.config.color ? client.config.color : "#59D893";
@@ -83,20 +169,20 @@ module.exports = class Context {
                 }
             }).catch(() => { });
             let embed = new EmbedBuilder()
-            .setColor(color)
-            .setAuthor({ name: message.author.tag.toString(), iconURL: message.author.displayAvatarURL({ dynamic: true }).toString() })
-            .setDescription(`**${args}**`)
-            .setTitle(`__${command.name}__`)
-            .addFields([
-                {
-                    name: "Usage",
-                    value: `\`${command.description.usage ? `${prefix}${command.name} ${command.description.usage}` : `${prefix}${command.name}`}\``,
-                    inline: false
-                }, {
-                    name: "Example(s)",
-                    value: `${command.description.examples ? `\`${prefix}${command.description.examples.join(`\`\n\`${prefix}`)}\`` : "`" + prefix + command.name + "`"}`
-                }
-            ]);
+                .setColor(color)
+                .setAuthor({ name: message.author.tag.toString(), iconURL: message.author.displayAvatarURL({ dynamic: true }).toString() })
+                .setDescription(`**${args}**`)
+                .setTitle(`__${command.name}__`)
+                .addFields([
+                    {
+                        name: "Usage",
+                        value: `\`${command.description.usage ? `${prefix}${command.name} ${command.description.usage}` : `${prefix}${command.name}`}\``,
+                        inline: false
+                    }, {
+                        name: "Example(s)",
+                        value: `${command.description.examples ? `\`${prefix}${command.description.examples.join(`\`\n\`${prefix}`)}\`` : "`" + prefix + command.name + "`"}`
+                    }
+                ]);
 
             await this.msg.edit({
                 content: null,

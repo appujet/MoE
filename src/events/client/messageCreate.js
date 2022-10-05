@@ -40,7 +40,7 @@ module.exports = class MessageCreate extends Event {
         ctx.setArgs(args);
         
         if (!command) return;
-        this.client.logger.command('%s used by %s from %s', commandName, ctx.author.id, ctx.guild.id)
+        this.client.logger.cmd('%s used by %s from %s', commandName, ctx.author.id, ctx.guild.id)
         let dm = message.author.dmChannel;
         if (typeof dm === "undefined") dm = await message.author.createDM()
 
@@ -96,7 +96,7 @@ module.exports = class MessageCreate extends Event {
         
         try {
 
-            return await command.run(this.client, ctx, ctx.args, prefix, color);
+            return await command.run(ctx, ctx.args);
 
         } catch (error) {
             await message.channel.send({ content: "An unexpected error occured, the developers have been notified!" }).catch(() => { });

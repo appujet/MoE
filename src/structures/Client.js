@@ -136,8 +136,8 @@ module.exports = class Moe extends Client {
     };
     async connect() {
         super.login(this.config.token);
-        this._loadEvents();
-        this._loadCommands();
+        this.loadEvents();
+        this.loadCommands();
 
     };
 };

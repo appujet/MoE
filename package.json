@@ -30,7 +30,16 @@
   "dependencies": {
     "discord-hybrid-sharding": "^1.7.4",
     "discord.js": "^14.5.0",
+    "module-alias": "^2.2.2",
     "mongoose": "^6.6.4",
     "signale": "^1.4.0"
+  },
+  "_moduleAliases": {
+    "@root": ".",
+    "@src": "src/",
+    "@structures": "src/structures/",
+    "@handlers": "src/handlers/",
+    "@schemas": "src/schemas/",
+    "@utils": "src/utils/"
   }
 }
