@@ -1,0 +1,7 @@
+{
+    "extends": "tesseract",
+    "rules": {
+        "no-empty-function": "off",
+        "max-len": "off"
+    }
+}

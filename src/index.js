@@ -1,6 +1,6 @@
 const { Manager } = require("discord-hybrid-sharding");
-const signale = require('signale');
-const { token } = require("@src/config");
+const signale = require("signale");
+const { token } = require("./config");
 
 signale.config({
   displayFilename: true,
@@ -8,7 +8,7 @@ signale.config({
   displayDate: false,
 });
 
-const manager = new Manager('./moe.js', {
+const manager = new Manager("./src/moe.js", {
   mode: "process",
   shardsPerClusters: 4,
   token,
@@ -16,8 +16,8 @@ const manager = new Manager('./moe.js', {
   totalShards: "auto",
 });
 
-manager.on('clusterCreate', cluster => {
-  signale.info(`[ Launched ] Cluster ${cluster.id}`)
+manager.on("clusterCreate", (cluster) => {
+  signale.info(`[ Launched ] Cluster ${cluster.id}`);
 });
 
 manager.spawn({ timeout: -1 }).catch((err) => console.log(err));

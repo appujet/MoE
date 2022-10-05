@@ -1,111 +1,129 @@
-const { Message, CommandInteraction, EmbedBuilder } = require('discord.js');
+const { Message, CommandInteraction, EmbedBuilder } = require("discord.js");
 
 module.exports = class Context {
-    constructor(ctx, args) {
-        this.isInteraction = ctx instanceof CommandInteraction;
-        this.ctx = ctx;
-        this.setArgs(args);
-        this.interaction = this.isInteraction ? ctx : null;
-        this.message = this.isInteraction ? null : ctx;
-        this.id = ctx.id;
-        this.applicationId = ctx.applicationId;
-        this.channelId = ctx.channelId;
-        this.guildId = ctx.guildId;
-        this.client = ctx.client;
-        this.author = ctx instanceof Message ? ctx.author : ctx.user;
-        this.channel = ctx.channel;
-        this.guild = ctx.guild;
-        this.member = ctx.member;
-        this.createdAt = ctx.createdAt;
-        this.createdTimestamp = ctx.createdTimestamp;
-        this.attachments = ctx.attachments;
+  constructor(ctx, args) {
+    this.isInteraction = ctx instanceof CommandInteraction;
+    this.ctx = ctx;
+    this.setArgs(args);
+    this.interaction = this.isInteraction ? ctx : null;
+    this.message = this.isInteraction ? null : ctx;
+    this.id = ctx.id;
+    this.applicationId = ctx.applicationId;
+    this.channelId = ctx.channelId;
+    this.guildId = ctx.guildId;
+    this.client = ctx.client;
+    this.author = ctx instanceof Message ? ctx.author : ctx.user;
+    this.channel = ctx.channel;
+    this.guild = ctx.guild;
+    this.member = ctx.member;
+    this.createdAt = ctx.createdAt;
+    this.createdTimestamp = ctx.createdTimestamp;
+    this.attachments = ctx.attachments;
+  }
+
+  setArgs(args) {
+    if (this.isInteraction) {
+      this.args = args.map((arg) => arg.value);
+    } else {
+      this.args = args;
     }
+  }
+  async sendMessage(content) {
+    if (this.isInteraction) {
+      this.msg = this.interaction.deferred
+        ? await this.followUp(content)
+        : await this.reply(content);
+      return this.msg;
+    } else {
+      this.msg = this.message.channel.send(content);
+      return this.msg;
+    }
+  }
+  async sendDeferMessage(content) {
+    if (this.isInteraction) {
+      this.msg = await this.deferReply({ fetchReply: true });
+      return this.msg;
+    } else {
+      this.msg = await this.channel.send(content);
+      return this.msg;
+    }
+  }
+  async sendFollowUp(content) {
+    if (this.isInteraction) {
+      await this.followUp(content);
+    } else {
+      this.channel.send(content);
+    }
+  }
+  editMessage(content) {
+    if (this.isInteraction) {
+      return this.editReply(content);
+    } else {
+      return this.msg.edit(content);
+    }
+  }
+  deleteMessage() {
+    if (this.isInteraction) {
+      return this.deleteReply();
+    } else {
+      return this.msg.delete();
+    }
+  }
+  async invalidArgs(commandName, message, args, client) {
+    try {
+      let color = client.config.color ? client.config.color : "#59D893";
+      let prefix = client.config.prefix;
+      let command =
+        client.commands.get(commandName) ||
+        client.commands.get(client.aliases.get(commandName));
+      if (!command)
+        return await message
+          .edit({
+            embeds: [new EmbedBuilder().setColor(color).setDescription(args)],
+            allowedMentions: {
+              repliedUser: false,
+            },
+          })
+          .catch(() => {});
+      let embed = new EmbedBuilder()
+        .setColor(color)
+        .setAuthor({
+          name: message.author.tag.toString(),
+          iconURL: message.author
+            .displayAvatarURL({ dynamic: true })
+            .toString(),
+        })
+        .setDescription(`**${args}**`)
+        .setTitle(`__${command.name}__`)
+        .addFields([
+          {
+            name: "Usage",
+            value: `\`${
+              command.description.usage
+                ? `${prefix}${command.name} ${command.description.usage}`
+                : `${prefix}${command.name}`
+            }\``,
+            inline: false,
+          },
+          {
+            name: "Example(s)",
+            value: `${
+              command.description.examples
+                ? `\`${prefix}${command.description.examples.join(
+                    `\`\n\`${prefix}`
+                  )}\``
+                : "`" + prefix + command.name + "`"
+            }`,
+          },
+        ]);
 
-    setArgs(args) {
-        if (this.isInteraction) {
-            this.args = args.map(arg => arg.value);
-        }
-        else {
-            this.args = args;
-        }
-    };
-    async sendMessage(content) {
-        if (this.isInteraction) {
-            this.msg = this.interaction.deferred ? await this.followUp(content) : await this.reply(content);
-            return this.msg;
-        } else {
-            this.msg = this.message.channel.send(content);
-            return this.msg;
-        }
-    };
-    async sendDeferMessage(content) {
-        if (this.isInteraction) {
-            this.msg = await this.deferReply({ fetchReply: true });
-            return this.msg;
-        }
-        else {
-            this.msg = await this.channel.send(content);
-            return this.msg;
-        }
-    };
-    async sendFollowUp(content) {
-        if (this.isInteraction) {
-            await this.followUp(content);
-        }
-        else {
-            this.channel.send(content);
-        }
-    };
-    editMessage(content) {
-        if (this.isInteraction) {
-            return this.editReply(content);
-        }
-        else {
-            return this.msg.edit(content);
-        }
-    };
-    deleteMessage() {
-        if (this.isInteraction) {
-            return this.deleteReply();
-        }
-        else {
-            return this.msg.delete();
-        }
-    };
-    async invalidArgs(commandName, message, args, client) {
-        try {
-            let color = client.config.color ? client.config.color : "#59D893";
-            let prefix = client.config.prefix;
-            let command = client.commands.get(commandName) || client.commands.get(client.aliases.get(commandName));
-            if (!command) return await message.edit({
-                embeds: [new EmbedBuilder().setColor(color).setDescription(args)], allowedMentions: {
-                    repliedUser: false
-                }
-            }).catch(() => { });
-            let embed = new EmbedBuilder()
-            .setColor(color)
-            .setAuthor({ name: message.author.tag.toString(), iconURL: message.author.displayAvatarURL({ dynamic: true }).toString() })
-            .setDescription(`**${args}**`)
-            .setTitle(`__${command.name}__`)
-            .addFields([
-                {
-                    name: "Usage",
-                    value: `\`${command.description.usage ? `${prefix}${command.name} ${command.description.usage}` : `${prefix}${command.name}`}\``,
-                    inline: false
-                }, {
-                    name: "Example(s)",
-                    value: `${command.description.examples ? `\`${prefix}${command.description.examples.join(`\`\n\`${prefix}`)}\`` : "`" + prefix + command.name + "`"}`
-                }
-            ]);
-
-            await this.msg.edit({
-                content: null,
-                embeds: [embed],
-                allowedMentions: { repliedUser: false }
-            });
-        } catch (e) {
-            console.error(e);
-        };
-    };
-
+      await this.msg.edit({
+        content: null,
+        embeds: [embed],
+        allowedMentions: { repliedUser: false },
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  }
 };
