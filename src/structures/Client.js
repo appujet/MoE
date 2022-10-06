@@ -31,7 +31,9 @@ module.exports = class Moe extends Client {
             ],
             partials: [Partials.Channel, Partials.GuildMember, Partials.Message, Partials.User, Partials.Reaction],
             restTimeOffset: 0,
+            restRequestTimeout: 20000,
         });
+
         this.commands = new Collection();
         this.config = require('@src/config');
         this.aliases = new Collection();
@@ -116,7 +118,7 @@ module.exports = class Moe extends Client {
         EventsFolder.forEach(async (eventFolder) => {
             const events = readdirSync(`./src/events/${eventFolder}`).filter(c => c.split('.').pop() === 'js');
             if (eventFolder != 'player' && eventFolder != 'node') {
-                events.forEach(async (eventStr)=> {
+                events.forEach(async (eventStr) => {
                     if (!events.length) throw Error('No event files found!');
                     const file = require(`../events/${eventFolder}/${eventStr}`);
                     const event = new file(this, file);

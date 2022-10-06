@@ -1,5 +1,4 @@
 const { Message, CommandInteraction, EmbedBuilder, User, BaseChannel, Guild, GuildMember, Interaction } = require('discord.js');
-
 module.exports = class Context {
     constructor(ctx, args) {
         /**
@@ -120,10 +119,10 @@ module.exports = class Context {
      */
     async sendFollowUp(content) {
         if (this.isInteraction) {
-            await this.interaction.followUp(content);
+            await this.followUp(content);
         }
         else {
-            this.message.channel.send(content);
+            this.channel.send(content);
         }
     };
     /**
@@ -133,24 +132,25 @@ module.exports = class Context {
      */
     async editMessage(content) {
         if (this.isInteraction) {
-            return await this.interaction.editReply(content);
+            return this.interaction.editReply(content);
         }
         else {
-            return await this.message.edit(content);
+            return this.msg.edit(content);
         }
     };
     /**
      * 
      * @returns {Promise<Message>}
      */
-   async deleteMessage() {
+    deleteMessage() {
         if (this.isInteraction) {
-            return await this.interaction.deleteReply();
+            return this.interaction.deleteReply();
         }
         else {
-            return await this.message.delete();
+            return this.msg.delete();
         }
     };
+
     /**
      * @param {string} commandName
      * @param {Message} message
