@@ -42,7 +42,7 @@ module.exports = class Ban extends Command {
         });
     }
     /**
-     * @param {import('@structures/CommandContext')} ctx
+     * @param {import('@structures/Context')} ctx
      * @param {string[]} args
      */
     async run(ctx, args) {

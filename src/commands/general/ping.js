@@ -5,9 +5,9 @@ module.exports = class Ping extends Command {
         super(client, {
             name: 'ping',
             description: {
-                content: "Returns the latency of the bot.",
+                content: 'Returns the latency of the bot.',
                 usage: 'ping',
-                examples: ['ping']
+                examples: ['ping'],
             },
             aliases: ['pong'],
             category: 'general',
@@ -22,14 +22,14 @@ module.exports = class Ping extends Command {
                 dev: false,
                 client: ['SendMessages', 'ViewChannels', 'EmbedLinks'],
                 user: [],
-                voteRequired: false
+                voteRequired: false,
             },
             slashCommand: true,
         });
     }
-    async run(ctx, args) { 
-        const msg = await ctx.sendDeferMessage(`Pinging...`);
+    async run(ctx, args) {
+        const msg = await ctx.sendDeferMessage('Pinging...');
 
         return await ctx.editMessage(`Latency: \`${msg.createdTimestamp - ctx.createdTimestamp}ms.\` \nAPI Latency: \`${Math.round(ctx.client.ws.ping)}ms.\``);
     }
-}
+};

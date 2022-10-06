@@ -3,11 +3,10 @@ const { Shoukaku, Connectors, Node } = require('shoukaku');
 const Moe = require('@structures/Client');
 const Dispatcher = require('@structures/Dispatcher');
 class Manager {
-
 	/**
-   *
-   * @param {Moe} client
-   */
+      *
+      * @param {Moe} client
+      */
 	constructor(client) {
 		/**
 		* @type {Moe}
@@ -53,15 +52,15 @@ class Manager {
 			this.client.logger.info('Shoukaku Handler', `LAVALINK => ${name}`, reason || 'No reason'),
 		);
 	}
-	/**
+ /**
    *
    * @param {string} guildId Guild ID
    * @returns {Dispatcher}
    */
-	getPlayer(guildId) {
+getPlayer(guildId) {
 		return this.players.get(guildId);
 	}
-	/**
+ /**
    *
    * @param {Guild} guild Guild
    * @param {GuildMember} member Member
@@ -69,7 +68,7 @@ class Manager {
    * @param {Node} givenNode Node
    * @returns {Promise<Dispatcher>}
    */
-	async spawn(guild, member, channel, givenNode) {
+async spawn(guild, member, channel, givenNode) {
 		const existing = this.getPlayer(guild.id);
 
 		if (existing) return existing;
@@ -101,8 +100,7 @@ class Manager {
 		let result;
 		try {
 			result = await node.rest.resolve(query);
-		}
- catch (err) {
+		} catch (err) {
 			this.client.logger.log('Shoukaku Handler', `LAVALINK => Error while searching for ${query}`);
 			return null;
 		}

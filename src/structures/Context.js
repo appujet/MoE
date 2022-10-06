@@ -1,5 +1,6 @@
 /* eslint-disable no-empty-function */
 const { Message, CommandInteraction, EmbedBuilder, User, BaseChannel, Guild, GuildMember, Interaction } = require('discord.js');
+const { paginate } = require('@handlers/functions');
 module.exports = class Context {
     constructor(ctx, args) {
         /**
@@ -70,6 +71,10 @@ module.exports = class Context {
          * @type {Collection<?string, import("discord.js").AttachmentData>}
          */
         this.attachments = ctx.attachments;
+        /**
+         * @type {import('discord.js').MessageEmbed[]}
+         */
+        this.paginates = paginate;
     }
     /**
      *
@@ -151,7 +156,9 @@ module.exports = class Context {
             return this.msg.delete();
         }
     }
-
+    paginate(ctx, embed) {
+        return this.paginates(ctx, embed);
+    }
     /**
      * @param {string} commandName
      * @param {Message} message
@@ -191,7 +198,7 @@ module.exports = class Context {
                 allowedMentions: { repliedUser: false },
             });
         }
- catch (e) {
+        catch (e) {
             console.error(e);
         }
     }

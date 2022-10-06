@@ -4,45 +4,45 @@ const { Player } = require('shoukaku');
 
 class Dispatcher {
 
- /**
-   *
-   * @param {Moe} client
-   * @param {Guild} guild
-   * @param {TextChannel} channel
-   * @param {Player} player
-   */
+	/**
+	  *
+	  * @param {Moe} client
+	  * @param {Guild} guild
+	  * @param {TextChannel} channel
+	  * @param {Player} player
+	  */
 	constructor(client, guild, channel, player) {
 		/**
-	     * @type {Moe}
-	     */
+		 * @type {Moe}
+		 */
 		this.client = client;
 		/**
-	     * @type {Guild}
-	     */
+		 * @type {Guild}
+		 */
 		this.guild = guild;
 		/**
-	     * @type {TextChannel}
-	     */
+		 * @type {TextChannel}
+		 */
 		this.channel = channel;
 		/**
-	     * @type {Player}
-	     */
+		 * @type {Player}
+		 */
 		this.player = player;
 		/**
-	     * @type {Array<import('shoukaku').Track>}
-	     */
+		 * @type {Array<import('shoukaku').Track>}
+		 */
 		this.queue = [];
 		/**
-	     * @type {boolean}
-	    */
+		 * @type {boolean}
+	     */
 		this.stopped = false;
 		/**
-	     * @type {import('shoukaku').Track}
-	     */
+		 * @type {import('shoukaku').Track}
+		 */
 		this.current = null;
 		/**
-	     * @type {'off'|'repeat'|'queue'}
-	     */
+		 * @type {'off'|'repeat'|'queue'}
+		 */
 		this.loop = 'off';
 
 		this.player
@@ -106,9 +106,9 @@ class Dispatcher {
 	}
 
 	/**
-   *
-   * @returns {void}
-   */
+	  *
+	  * @returns {void}
+	  */
 	play() {
 		if (this.introId && this.current === this.introId) {
 			this.player.playTrack({
