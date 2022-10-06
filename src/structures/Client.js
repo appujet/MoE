@@ -3,6 +3,7 @@ const { connect } = require("mongoose");
 const { readdirSync } = require('node:fs');
 const Logger = require('@structures/Logger');
 const Cluster = require('discord-hybrid-sharding');
+const Manager = require('@structures/Manager');
 
 module.exports = class Moe extends Client {
     constructor() {
@@ -45,6 +46,7 @@ module.exports = class Moe extends Client {
             displayDate: true
         });
         this._connectMongodb();
+        this.manager = new Manager(this);
     }
     /**
      * 
