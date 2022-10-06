@@ -1,7 +1,7 @@
 const { model, Schema } = require('mongoose');
 const { prefix } = require('@src/config');
 const GuildSchema = new Schema({
-    _id: { type: String, required: true},
+    _id: { type: String, required: true },
     prefix: { type: String, default: prefix },
     language: { type: String, default: 'en-US' },
     welcomeChannel: { type: String, default: null },

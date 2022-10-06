@@ -1,9 +1,9 @@
 module.exports = class Event {
     /**
-     * 
-     * @param {import('@structures/Client')} client 
-     * @param {String} file 
-     * @param {String} options 
+     *
+     * @param {import('@structures/Client')} client
+     * @param {String} file
+     * @param {String} options
      */
     constructor(client, file, options = {}) {
         this.client = client;

@@ -1,5 +1,5 @@
-const { Client, Routes, REST, ActionRowBuilder, PermissionsBitField, ApplicationCommandType, GatewayIntentBits, Partials, Collection, EmbedBuilder, ButtonBuilder, SelectMenuBuilder } = require("discord.js");
-const { connect } = require("mongoose");
+const { Client, Routes, REST, ActionRowBuilder, PermissionsBitField, ApplicationCommandType, GatewayIntentBits, Partials, Collection, EmbedBuilder, ButtonBuilder, SelectMenuBuilder } = require('discord.js');
+const { connect } = require('mongoose');
 const { readdirSync } = require('node:fs');
 const Logger = require('@structures/Logger');
 const Cluster = require('discord-hybrid-sharding');
@@ -9,7 +9,7 @@ module.exports = class Moe extends Client {
     constructor() {
         super({
             allowedMentions: {
-                parse: ["users", "roles", "everyone"],
+                parse: ['users', 'roles', 'everyone'],
                 repliedUser: false,
             },
             shards: Cluster.data.SHARD_LIST,
@@ -43,39 +43,39 @@ module.exports = class Moe extends Client {
         this.cluster = new Cluster.Client(this);
         this.logger = new Logger({
             displayTimestamp: true,
-            displayDate: true
+            displayDate: true,
         });
         this._connectMongodb();
         this.manager = new Manager(this);
     }
     /**
-     * 
+     *
      * @returns {EmbedBuilder}
      */
     embed() {
         return new EmbedBuilder();
-    };
+    }
     /**
-     * 
+     *
      * @returns {ButtonBuilder}
      */
     button() {
         return new ButtonBuilder();
-    };
+    }
     /**
-     * 
+     *
      * @returns {SelectMenuBuilder}
      */
     manu() {
         return new SelectMenuBuilder();
-    };
-    /**\
-     * 
+    }
+    /** \
+     *
      * @returns {ActionRowBuilder}
      */
     raw() {
         return new ActionRowBuilder();
-    };
+    }
 
     loadCommands() {
         const data = [];
@@ -94,7 +94,7 @@ module.exports = class Moe extends Client {
                     for (const alias of cmd.aliases) {
                         this.aliases.set(alias, cmd);
                     }
-                };
+                }
                 if (cmd.slashCommand) {
                     data.push({
                         name: cmd.name,
@@ -103,19 +103,19 @@ module.exports = class Moe extends Client {
                         type: ApplicationCommandType.ChatInput,
                     });
                     if (cmd.permissions.user.length > 0) data.default_member_permissions = cmd.permissions.user ? PermissionsBitField.resolve(cmd.permissions.user).toString() : 0;
-                    ++i
-                };
-                this.logger.event(`Successfully loaded [/] command ${i}.`)
+                    ++i;
+                }
+                this.logger.event(`Successfully loaded [/] command ${i}.`);
 
-                const rest = new REST({ version: '9' }).setToken(this ? this.config.token : config.token);
+                const rest = new REST({ version: '9' }).setToken(this ? this.config.token : this.config.token);
 
-                rest.put(Routes.applicationCommands(this ? this.config.clientId : config.clientId), { body: data }).then(() => this.logger.info('Successfully reloaded application (/) commands.')).catch((e) => console.error(e));
+                rest.put(Routes.applicationCommands(this ? this.config.clientId : this.config.clientId), { body: data }).then(() => this.logger.info('Successfully reloaded application (/) commands.')).catch((e) => this.logger.error(e));
 
             });
         });
-    };
+    }
     loadEvents() {
-        const EventsFolder = readdirSync('./src/events')
+        const EventsFolder = readdirSync('./src/events');
         let i = 0;
         EventsFolder.forEach(async (eventFolder) => {
             const events = readdirSync(`./src/events/${eventFolder}`).filter(c => c.split('.').pop() === 'js');
@@ -129,19 +129,19 @@ module.exports = class Moe extends Client {
                     ++i;
                 });
 
-            };
+            }
 
         });
-        this.logger.event(`Successfully loaded event ${i}.`)
-    };
+        this.logger.event(`Successfully loaded event ${i}.`);
+    }
     async _connectMongodb() {
         await connect(this.config.database);
         this.logger.ready('Successfully connected to MongoDB.');
-    };
+    }
     async connect() {
         super.login(this.config.token);
         this.loadEvents();
         this.loadCommands();
 
-    };
+    }
 };

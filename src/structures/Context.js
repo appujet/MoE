@@ -1,3 +1,4 @@
+/* eslint-disable no-empty-function */
 const { Message, CommandInteraction, EmbedBuilder, User, BaseChannel, Guild, GuildMember, Interaction } = require('discord.js');
 module.exports = class Context {
     constructor(ctx, args) {
@@ -71,8 +72,8 @@ module.exports = class Context {
         this.attachments = ctx.attachments;
     }
     /**
-     * 
-     * @param {any} args 
+     *
+     * @param {any} args
      * @returns {void}
      */
     setArgs(args) {
@@ -82,10 +83,10 @@ module.exports = class Context {
         else {
             this.args = args;
         }
-    };
+    }
     /**
-     * 
-     * @param {String} content 
+     *
+     * @param {String} content
      * @returns {Promise<Message>}
      */
     async sendMessage(content) {
@@ -96,10 +97,10 @@ module.exports = class Context {
             this.msg = this.message.channel.send(content);
             return this.msg;
         }
-    };
+    }
     /**
-     * 
-     * @param {String} content 
+     *
+     * @param {String} content
      * @returns {Promise<Message>}
      */
     async sendDeferMessage(content) {
@@ -111,10 +112,10 @@ module.exports = class Context {
             this.msg = await this.message.channel.send(content);
             return this.msg;
         }
-    };
+    }
     /**
-     * 
-     * @param {String} content 
+     *
+     * @param {String} content
      * @returns {Promise<Message>}
      */
     async sendFollowUp(content) {
@@ -124,10 +125,10 @@ module.exports = class Context {
         else {
             this.channel.send(content);
         }
-    };
+    }
     /**
-     * 
-     * @param {String} content 
+     *
+     * @param {String} content
      * @returns {Promise<Message>}
      */
     async editMessage(content) {
@@ -137,9 +138,9 @@ module.exports = class Context {
         else {
             return this.msg.edit(content);
         }
-    };
+    }
     /**
-     * 
+     *
      * @returns {Promise<Message>}
      */
     deleteMessage() {
@@ -149,7 +150,7 @@ module.exports = class Context {
         else {
             return this.msg.delete();
         }
-    };
+    }
 
     /**
      * @param {string} commandName
@@ -160,38 +161,39 @@ module.exports = class Context {
      */
     async invalidArgs(commandName, message, args, client) {
         try {
-            let color = client.config.color ? client.config.color : "#59D893";
-            let prefix = client.config.prefix;
-            let command = client.commands.get(commandName) || client.commands.get(client.aliases.get(commandName));
+            const color = client.config.color ? client.config.color : '#59D893';
+            const prefix = client.config.prefix;
+            const command = client.commands.get(commandName) || client.commands.get(client.aliases.get(commandName));
             if (!command) return await message.edit({
                 embeds: [new EmbedBuilder().setColor(color).setDescription(args)], allowedMentions: {
-                    repliedUser: false
-                }
+                    repliedUser: false,
+                },
             }).catch(() => { });
-            let embed = new EmbedBuilder()
+            const embed = new EmbedBuilder()
                 .setColor(color)
                 .setAuthor({ name: message.author.tag.toString(), iconURL: message.author.displayAvatarURL({ dynamic: true }).toString() })
                 .setDescription(`**${args}**`)
                 .setTitle(`__${command.name}__`)
                 .addFields([
                     {
-                        name: "Usage",
+                        name: 'Usage',
                         value: `\`${command.description.usage ? `${prefix}${command.name} ${command.description.usage}` : `${prefix}${command.name}`}\``,
-                        inline: false
+                        inline: false,
                     }, {
-                        name: "Example(s)",
-                        value: `${command.description.examples ? `\`${prefix}${command.description.examples.join(`\`\n\`${prefix}`)}\`` : "`" + prefix + command.name + "`"}`
-                    }
+                        name: 'Example(s)',
+                        value: `${command.description.examples ? `\`${prefix}${command.description.examples.join(`\`\n\`${prefix}`)}\`` : '`' + prefix + command.name + '`'}`,
+                    },
                 ]);
 
             await this.msg.edit({
                 content: null,
                 embeds: [embed],
-                allowedMentions: { repliedUser: false }
+                allowedMentions: { repliedUser: false },
             });
-        } catch (e) {
+        }
+ catch (e) {
             console.error(e);
-        };
-    };
+        }
+    }
 
 };

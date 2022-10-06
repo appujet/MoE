@@ -4,7 +4,7 @@ const { Player } = require('shoukaku');
 
 class Dispatcher {
 
-	/**
+ /**
    *
    * @param {Moe} client
    * @param {Guild} guild
@@ -13,37 +13,36 @@ class Dispatcher {
    */
 	constructor(client, guild, channel, player) {
 		/**
-	 * @type {Moe}
-	 */
+	     * @type {Moe}
+	     */
 		this.client = client;
 		/**
-	 * @type {Guild}
-	 */
+	     * @type {Guild}
+	     */
 		this.guild = guild;
 		/**
-	 * @type {TextChannel}
-	 */
+	     * @type {TextChannel}
+	     */
 		this.channel = channel;
 		/**
-	 * @type {Player}
-	 */
+	     * @type {Player}
+	     */
 		this.player = player;
-
 		/**
-	 * @type {Array<import('shoukaku').Track>}
-	 */
+	     * @type {Array<import('shoukaku').Track>}
+	     */
 		this.queue = [];
 		/**
-	 * @type {boolean}
-	 */
+	     * @type {boolean}
+	    */
 		this.stopped = false;
 		/**
-	 * @type {import('shoukaku').Track}
-	 */
+	     * @type {import('shoukaku').Track}
+	     */
 		this.current = null;
 		/**
-	 * @type {'off'|'repeat'|'queue'}
-	 */
+	     * @type {'off'|'repeat'|'queue'}
+	     */
 		this.loop = 'off';
 
 		this.player
@@ -52,14 +51,14 @@ class Dispatcher {
 
 				const parsedDuration = this.client.utils.formatDuration(
 					current.info.length,
-					true
+					true,
 				);
 
 				const embed = this.client
 					.embed()
 					.setTitle('🎵 Now Playing')
 					.setDescription(
-						`[${current.info.title}](${current.info.uri}) • \`[${parsedDuration}]\``
+						`[${current.info.title}](${current.info.uri}) • \`[${parsedDuration}]\``,
 					);
 
 				const thumbnail = this.displayThumbnail();
@@ -70,7 +69,7 @@ class Dispatcher {
 
 				this.channel
 					.send({
-						embeds: [embed]
+						embeds: [embed],
 					})
 					.catch(() => null);
 			})
@@ -113,7 +112,7 @@ class Dispatcher {
 	play() {
 		if (this.introId && this.current === this.introId) {
 			this.player.playTrack({
-				track: this.current
+				track: this.current,
 			});
 			return;
 		}
@@ -139,16 +138,16 @@ class Dispatcher {
 		let embed = this.client.embed();
 
 		if (reason === 'error') {
-			embed.setDescription(`A error occured!`);
+			embed.setDescription('A error occured!');
 		} else if (reason === 'empty') {
 			embed
 				.setTitle('🎵 Queue is empty.')
 				.setDescription(
-					`I have successfully left the voice channel. Hope to see you again soon! 😔`
+					'I have successfully left the voice channel. Hope to see you again soon! 😔',
 				);
 		} else if (reason === 'leave') {
 			embed.setDescription(
-				`I have successfully left the voice channel. Hope to see you again soon! 😔`
+				'I have successfully left the voice channel. Hope to see you again soon! 😔',
 			);
 		} else {
 			embed = null;
@@ -157,7 +156,7 @@ class Dispatcher {
 		if (embed) {
 			this.channel
 				.send({
-					embeds: [embed]
+					embeds: [embed],
 				})
 				.catch(() => null);
 		}
@@ -176,8 +175,8 @@ class Dispatcher {
 	}
 
 	/**
-     * @returns {void}
-     */
+	 * @returns {void}
+	 */
 	check() {
 		if (this.queue.length && !this.current && !this.player.paused) {
 			this.play();

@@ -1,4 +1,4 @@
-require("module-alias/register");
+require('module-alias/register');
 const Client = require('@structures/Client');
 
 const client = new Client();
@@ -9,10 +9,10 @@ module.exports = client;
 
 process.on('uncaughtException', (e) => {
     client.logger.error(e);
-})
+});
 process.on('unhandledRejection', (e) => {
     client.logger.error(e);
-})
+});
 process.on('warning', (e) => {
     client.logger.error(e);
-})
+});

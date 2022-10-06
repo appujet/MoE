@@ -6,9 +6,9 @@ module.exports = class Prefix extends Command {
         super(client, {
             name: 'prefix',
             description: {
-                content: "Sets the prefix for the bot.",
+                content: 'Sets the prefix for the bot.',
                 usage: 'prefix <prefix>',
-                examples: ['prefix !']
+                examples: ['prefix !'],
             },
             aliases: ['setprefix'],
             category: 'settings',
@@ -23,7 +23,7 @@ module.exports = class Prefix extends Command {
                 dev: false,
                 client: ['SendMessages', 'ViewChannels', 'EmbedLinks'],
                 user: ['ManageGuild'],
-                voteRequired: false
+                voteRequired: false,
             },
             slashCommand: true,
             options: [
@@ -33,18 +33,18 @@ module.exports = class Prefix extends Command {
                     type: 3,
                     maxLength: 20,
                     required: false,
-                }
-            ]
+                },
+            ],
         });
     }
     async run(ctx, args) {
-        let data = await guildDb.findOne({ _id: ctx.guild.id });
+        const data = await guildDb.findOne({ _id: ctx.guild.id });
         if (!args[0]) {
             return await ctx.sendMessage(`The current prefix is \`${data.prefix}\`.`);
         }
         const pref = args[0].replace(/_/g, '');
-        if (pref.length > 20) return await ctx.sendMessage(`The prefix can't be longer than 20 characters.`);
+        if (pref.length > 20) return await ctx.sendMessage('The prefix can\'t be longer than 20 characters.');
         await data.updateOne({ prefix: pref });
         return await ctx.sendMessage(`successfully set the prefix to \`${pref}\`.`);
     }
-}
+};

@@ -2,7 +2,6 @@ const { Collection, Guild, GuildMember, TextChannel } = require('discord.js');
 const { Shoukaku, Connectors, Node } = require('shoukaku');
 const Moe = require('@structures/Client');
 const Dispatcher = require('@structures/Dispatcher');
-
 class Manager {
 
 	/**
@@ -11,12 +10,12 @@ class Manager {
    */
 	constructor(client) {
 		/**
-	 * @type {Moe}
-	 */
+		* @type {Moe}
+		*/
 		this.client = client;
 		/**
-	 * @type {Shoukaku}
-	 */
+		 * @type {Shoukaku}
+		 */
 		this.shoukaku = new Shoukaku(
 			new Connectors.DiscordJS(this.client),
 			this.client.config.nodes,
@@ -25,21 +24,17 @@ class Manager {
 				resumable: false,
 				resumableTimeout: 30,
 				reconnectTries: 2,
-				restTimeout: 10000
-			}
+				restTimeout: 10000,
+			},
 		);
 
 		/**
-	 * @type {Collection<string, Dispatcher>}
-	 */
+		 * @type {Collection<string, Dispatcher>}
+		 */
 		this.players = new Collection();
 
 		this.shoukaku.on('ready', (name, resumed) => {
-			this.client.logger.ready(
-				'Shoukaku Handler',
-				`LAVALINK => [STATUS] ${name} successfully connected.`,
-				`This connection is ${resumed ? 'resumed' : 'a new connection'}`
-			);
+			this.client.logger.ready('Shoukaku Handler', `LAVALINK => [STATUS] ${name} successfully connected.`, `This connection is ${resumed ? 'resumed' : 'a new connection'}`);
 		});
 
 		this.shoukaku.on('error', (name, error) => {
@@ -47,27 +42,15 @@ class Manager {
 		});
 
 		this.shoukaku.on('close', (name, code, reason) =>
-			this.client.logger.warn(
-				'Shoukaku Handler',
-				`LAVALINK => ${name}: Closed, Code ${code}`,
-				`Reason ${reason || 'No reason'}.`
-			)
+			this.client.logger.warn('Shoukaku Handler', `LAVALINK => ${name}: Closed, Code ${code}`, `Reason ${reason || 'No reason'}.`),
 		);
 
 		this.shoukaku.on('disconnect', (name, players, moved) => {
-			this.client.logger.info(
-				'Shoukaku Handler',
-				`LAVALINK => ${name}: Disconnected`,
-				moved ? 'players have been moved' : 'players have been disconnected'
-			);
+			this.client.logger.info('Shoukaku Handler', `LAVALINK => ${name}: Disconnected`, moved ? 'players have been moved' : 'players have been disconnected');
 		});
 
 		this.shoukaku.on('debug', (name, reason) =>
-			this.client.logger.info(
-				'Shoukaku Handler',
-				`LAVALINK => ${name}`,
-				reason || 'No reason'
-			)
+			this.client.logger.info('Shoukaku Handler', `LAVALINK => ${name}`, reason || 'No reason'),
 		);
 	}
 	/**
@@ -97,7 +80,7 @@ class Manager {
 			guildId: guild.id,
 			shardId: guild.shardId,
 			channelId: member.voice.channelId,
-			deaf: true
+			deaf: true,
 		});
 
 		const dispatcher = new Dispatcher(this.client, guild, channel, player);
@@ -108,21 +91,19 @@ class Manager {
 	}
 
 	/**
-     *
-     * @param {string} query
-     * @returns {any}
-    */
+	 *
+	 * @param {string} query
+	 * @returns {any}
+	 */
 	async search(query) {
 		const node = await this.shoukaku.getNode();
 
 		let result;
 		try {
 			result = await node.rest.resolve(query);
-		} catch (err) {
-			this.client.logger.log(
-				'Shoukaku Handler',
-				`LAVALINK => Error while searching for ${query}`
-			);
+		}
+ catch (err) {
+			this.client.logger.log('Shoukaku Handler', `LAVALINK => Error while searching for ${query}`);
 			return null;
 		}
 

@@ -1,4 +1,4 @@
-const Event = require("@structures/Event");
+const Event = require('@structures/Event');
 
 module.exports = class Ready extends Event {
     constructor(...args) {
@@ -6,17 +6,17 @@ module.exports = class Ready extends Event {
     }
     async run() {
 
-        this.client.logger.ready(`Logged in as `, this.client.user.tag);
+        this.client.logger.ready('Logged in as ', this.client.user.tag);
 
         this.client.user.setPresence({
             activities: [
                 {
-                    name: "/play",
+                    name: '/play',
                     type: 2,
-                }
+                },
             ],
-            status: "online"
+            status: 'online',
         });
-       
+
     }
-}
+};

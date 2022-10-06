@@ -41,5 +41,8 @@
     "@handlers": "src/handlers/",
     "@schemas": "src/schemas/",
     "@utils": "src/utils/"
+  },
+  "devDependencies": {
+    "eslint": "^8.1.0"
   }
 }

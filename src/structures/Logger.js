@@ -44,4 +44,4 @@ module.exports = class Logger extends Signale {
             scope: (client ? `Shard ${('00' + client.shard.ids[0]).slice(-2)}` : 'Manager'),
         });
     }
-}
+};

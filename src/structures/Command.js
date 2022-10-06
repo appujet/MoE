@@ -13,9 +13,9 @@
 
  module.exports = class Command {
     /**
-     * 
-     * @param {import('@structures/Client')} client 
-     * @param {CommandOptions} options 
+     *
+     * @param {import('@structures/Client')} client
+     * @param {CommandOptions} options
      */
     constructor(client, options) {
         /**
@@ -38,7 +38,7 @@
         };
         this.permissions = {
             dev: options.permissions ? (options.permissions.dev || false) : false,
-            client: options.permissions ? (options.permissions.client || []) : ["SendMessages", "ViewChannel",  "EmbedLinks"],
+            client: options.permissions ? (options.permissions.client || []) : ['SendMessages', 'ViewChannel', 'EmbedLinks'],
             user: options.permissions ? (options.permissions.user || []) : [],
             voteRequired: options.permissions ? (options.permissions.voteRequired || false) : false,
         };

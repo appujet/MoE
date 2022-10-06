@@ -2,8 +2,8 @@ const guildDb = require('@schemas/guild');
 
 module.exports = class Functions {
     /**
-     * 
-     * @param {import('discord.js').Guild} guildId 
+     *
+     * @param {import('discord.js').Guild} guildId
      * @returns {Promise<import('@schemas/guild')>}
      */
     static async createGuildDb(guildId) {
@@ -13,10 +13,10 @@ module.exports = class Functions {
 
         await guild.save();
         return guild;
-    };
+    }
     /**
-     * 
-     * @param {import('discord.js').Guild} guildId 
+     *
+     * @param {import('discord.js').Guild} guildId
      * @returns {Promise<import('@schemas/guild')>}
      */
     static async getPrefix(guildId) {
@@ -24,4 +24,4 @@ module.exports = class Functions {
 
         return guild.prefix;
     }
-}
+};
