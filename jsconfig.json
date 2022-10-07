@@ -1,31 +1,16 @@
 {
-  "compilerOptions": {
-    "module": "commonjs",
-    "target": "es6",
-    "baseUrl": "./",
-    "paths": {
-      "@root/*": [
-        "./*"
-      ],
-      "@schemas/*": [
-        "./src/schemas/*"
-      ],
-      "@src/*": [
-        "./src/*"
-      ],
-      "@utils/*": [
-        "./src/utils/*"
-      ],
-      "@handlers/*": [
-        "./src/handlers/*"
-      ],
-      "@structures/*": [
-        "./src/structures/*"
-      ]
-    }
-  },
-  "exclude": [
-    "node_modules",
-    "**/node_modules/*"
-  ]
-}
+    "compilerOptions": {
+      "module": "commonjs",
+      "target": "es6",
+      "baseUrl": "./",
+      "paths": {
+        "@root/*": ["./*"],
+        "@schemas/*": ["./src/schemas/*"],
+        "@src/*": ["./src/*"],
+        "@utils/*": ["./src/utils/*"],
+        "@handlers/*": ["./src/handlers/*"],
+        "@structures/*": ["./src/structures/*"]
+      }
+    },
+    "exclude": ["node_modules", "**/node_modules/*"]
+  }
