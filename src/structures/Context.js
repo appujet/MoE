@@ -1,206 +1,232 @@
 /* eslint-disable no-empty-function */
-const { Message, CommandInteraction, EmbedBuilder, User, BaseChannel, Guild, GuildMember, Interaction } = require('discord.js');
-const { paginate } = require('@handlers/functions');
+const {
+  Message,
+  CommandInteraction,
+  EmbedBuilder,
+  User,
+  BaseChannel,
+  Guild,
+  GuildMember,
+  Interaction,
+} = require("discord.js");
+const { paginate } = require("@handlers/functions");
 module.exports = class Context {
-    constructor(ctx, args) {
-        /**
-         * @type {boolean}
-         */
-        this.isInteraction = ctx instanceof CommandInteraction;
-        /**
-         * @type {Message | CommandInteraction}
-         */
-        this.ctx = ctx;
-        /**
-         * @type {void}
-         */
-        this.setArgs(args);
-        /**
-         * @type {Interaction}
-         */
-        this.interaction = this.isInteraction ? ctx : null;
-        /**
-         * @type {Message}
-         */
-        this.message = this.isInteraction ? null : ctx;
-        /**
-         * @type {String}
-         */
-        this.id = ctx.id;
-        /**
-        * @type {String}
-        */
-        this.applicationId = ctx.applicationId;
-        /**
-        * @type {String}
-        */
-        this.channelId = ctx.channelId;
-        /**
-        * @type {String}
-        */
-        this.guildId = ctx.guildId;
-        /**
-        * @type {import('@structures/Client')}
-        */
-        this.client = ctx.client;
-        /**
-         * @type {User}
-         */
-        this.author = ctx instanceof Message ? ctx.author : ctx.user;
-        /**
-         * @type {BaseChannel}
-         */
-        this.channel = ctx.channel;
-        /**
-         * @type {Guild}
-         */
-        this.guild = ctx.guild;
-        /**
-         * @type {GuildMember}
-         */
-        this.member = ctx.member;
-        /**
-         * @type {Date}
-         */
-        this.createdAt = ctx.createdAt;
-        /**
-         * @type {Number}
-         */
-        this.createdTimestamp = ctx.createdTimestamp;
-        /**
-         * @type {Collection<?string, import("discord.js").AttachmentData>}
-         */
-        this.attachments = ctx.attachments;
-        /**
-         * @type {import('discord.js').MessageEmbed[]}
-         */
-        this.paginates = paginate;
-    }
+  constructor(ctx, args) {
     /**
-     *
-     * @param {any} args
-     * @returns {void}
+     * @type {boolean}
      */
-    setArgs(args) {
-        if (this.isInteraction) {
-            this.args = args.map(arg => arg.value);
-        }
-        else {
-            this.args = args;
-        }
-    }
+    this.isInteraction = ctx instanceof CommandInteraction;
     /**
-     *
-     * @param {String} content
-     * @returns {Promise<Message>}
+     * @type {Message | CommandInteraction}
      */
-    async sendMessage(content) {
-        if (this.isInteraction) {
-            this.msg = this.interaction.deferred ? await this.followUp(content) : await this.reply(content);
-            return this.msg;
-        } else {
-            this.msg = this.message.channel.send(content);
-            return this.msg;
-        }
-    }
+    this.ctx = ctx;
     /**
-     *
-     * @param {String} content
-     * @returns {Promise<Message>}
+     * @type {void}
      */
-    async sendDeferMessage(content) {
-        if (this.isInteraction) {
-            this.msg = await this.interaction.deferReply({ fetchReply: true });
-            return this.msg;
-        }
-        else {
-            this.msg = await this.message.channel.send(content);
-            return this.msg;
-        }
-    }
+    this.setArgs(args);
     /**
-     *
-     * @param {String} content
-     * @returns {Promise<Message>}
+     * @type {Interaction}
      */
-    async sendFollowUp(content) {
-        if (this.isInteraction) {
-            await this.followUp(content);
-        }
-        else {
-            this.channel.send(content);
-        }
-    }
+    this.interaction = this.isInteraction ? ctx : null;
     /**
-     *
-     * @param {String} content
-     * @returns {Promise<Message>}
+     * @type {Message}
      */
-    async editMessage(content) {
-        if (this.isInteraction) {
-            return this.interaction.editReply(content);
-        }
-        else {
-            return this.msg.edit(content);
-        }
-    }
+    this.message = this.isInteraction ? null : ctx;
     /**
-     *
-     * @returns {Promise<Message>}
+     * @type {String}
      */
-    deleteMessage() {
-        if (this.isInteraction) {
-            return this.interaction.deleteReply();
-        }
-        else {
-            return this.msg.delete();
-        }
-    }
-    paginate(ctx, embed) {
-        return this.paginates(ctx, embed);
-    }
+    this.id = ctx.id;
     /**
-     * @param {string} commandName
-     * @param {Message} message
-     * @param {string[]} args
-     * @param {import('@structures/Client')} client
-     * @returns {Promise<void>}
+     * @type {String}
      */
-    async invalidArgs(commandName, message, args, client) {
-        try {
-            const color = client.config.color ? client.config.color : '#59D893';
-            const prefix = client.config.prefix;
-            const command = client.commands.get(commandName) || client.commands.get(client.aliases.get(commandName));
-            if (!command) return await message.edit({
-                embeds: [new EmbedBuilder().setColor(color).setDescription(args)], allowedMentions: {
-                    repliedUser: false,
-                },
-            }).catch(() => { });
-            const embed = new EmbedBuilder()
-                .setColor(color)
-                .setAuthor({ name: message.author.tag.toString(), iconURL: message.author.displayAvatarURL({ dynamic: true }).toString() })
-                .setDescription(`**${args}**`)
-                .setTitle(`__${command.name}__`)
-                .addFields([
-                    {
-                        name: 'Usage',
-                        value: `\`${command.description.usage ? `${prefix}${command.name} ${command.description.usage}` : `${prefix}${command.name}`}\``,
-                        inline: false,
-                    }, {
-                        name: 'Example(s)',
-                        value: `${command.description.examples ? `\`${prefix}${command.description.examples.join(`\`\n\`${prefix}`)}\`` : '`' + prefix + command.name + '`'}`,
-                    },
-                ]);
+    this.applicationId = ctx.applicationId;
+    /**
+     * @type {String}
+     */
+    this.channelId = ctx.channelId;
+    /**
+     * @type {String}
+     */
+    this.guildId = ctx.guildId;
+    /**
+     * @type {import('@structures/Client')}
+     */
+    this.client = ctx.client;
+    /**
+     * @type {User}
+     */
+    this.author = ctx instanceof Message ? ctx.author : ctx.user;
+    /**
+     * @type {BaseChannel}
+     */
+    this.channel = ctx.channel;
+    /**
+     * @type {Guild}
+     */
+    this.guild = ctx.guild;
+    /**
+     * @type {GuildMember}
+     */
+    this.member = ctx.member;
+    /**
+     * @type {Date}
+     */
+    this.createdAt = ctx.createdAt;
+    /**
+     * @type {Number}
+     */
+    this.createdTimestamp = ctx.createdTimestamp;
+    /**
+     * @type {Collection<?string, import("discord.js").AttachmentData>}
+     */
+    this.attachments = ctx.attachments;
+    /**
+     * @type {import('discord.js').MessageEmbed[]}
+     */
+    this.paginates = paginate;
+  }
+  /**
+   *
+   * @param {any} args
+   * @returns {void}
+   */
+  setArgs(args) {
+    if (this.isInteraction) {
+      this.args = args.map((arg) => arg.value);
+    } else {
+      this.args = args;
+    }
+  }
+  /**
+   *
+   * @param {String} content
+   * @returns {Promise<Message>}
+   */
+  async sendMessage(content) {
+    if (this.isInteraction) {
+      this.msg = this.interaction.deferred
+        ? await this.followUp(content)
+        : await this.reply(content);
+      return this.msg;
+    } else {
+      this.msg = this.message.channel.send(content);
+      return this.msg;
+    }
+  }
+  /**
+   *
+   * @param {String} content
+   * @returns {Promise<Message>}
+   */
+  async sendDeferMessage(content) {
+    if (this.isInteraction) {
+      this.msg = await this.interaction.deferReply({ fetchReply: true });
+      return this.msg;
+    } else {
+      this.msg = await this.message.channel.send(content);
+      return this.msg;
+    }
+  }
+  /**
+   *
+   * @param {String} content
+   * @returns {Promise<Message>}
+   */
+  async sendFollowUp(content) {
+    if (this.isInteraction) {
+      await this.followUp(content);
+    } else {
+      this.channel.send(content);
+    }
+  }
+  /**
+   *
+   * @param {String} content
+   * @returns {Promise<Message>}
+   */
+  async editMessage(content) {
+    if (this.isInteraction) {
+      return this.interaction.editReply(content);
+    } else {
+      return this.msg.edit(content);
+    }
+  }
+  /**
+   *
+   * @returns {Promise<Message>}
+   */
+  deleteMessage() {
+    if (this.isInteraction) {
+      return this.interaction.deleteReply();
+    } else {
+      return this.msg.delete();
+    }
+  }
+  paginate(ctx, embed) {
+    return this.paginates(ctx, embed);
+  }
+  /**
+   * @param {string} commandName
+   * @param {Message} message
+   * @param {string[]} args
+   * @param {import('@structures/Client')} client
+   * @returns {Promise<void>}
+   */
+  async invalidArgs(commandName, message, args, client) {
+    try {
+      const color = client.config.color ? client.config.color : "#59D893";
+      const prefix = client.config.prefix;
+      const command =
+        client.commands.get(commandName) ||
+        client.commands.get(client.aliases.get(commandName));
+      if (!command)
+        return await message
+          .edit({
+            embeds: [new EmbedBuilder().setColor(color).setDescription(args)],
+            allowedMentions: {
+              repliedUser: false,
+            },
+          })
+          .catch(() => {});
+      const embed = new EmbedBuilder()
+        .setColor(color)
+        .setAuthor({
+          name: message.author.tag.toString(),
+          iconURL: message.author
+            .displayAvatarURL({ dynamic: true })
+            .toString(),
+        })
+        .setDescription(`**${args}**`)
+        .setTitle(`__${command.name}__`)
+        .addFields([
+          {
+            name: "Usage",
+            value: `\`${
+              command.description.usage
+                ? `${prefix}${command.name} ${command.description.usage}`
+                : `${prefix}${command.name}`
+            }\``,
+            inline: false,
+          },
+          {
+            name: "Example(s)",
+            value: `${
+              command.description.examples
+                ? `\`${prefix}${command.description.examples.join(
+                    `\`\n\`${prefix}`
+                  )}\``
+                : "`" + prefix + command.name + "`"
+            }`,
+          },
+        ]);
 
-            await this.msg.edit({
-                content: null,
-                embeds: [embed],
-                allowedMentions: { repliedUser: false },
-            });
-        }
-        catch (e) {
-            console.error(e);
-        }
+      await this.msg.edit({
+        content: null,
+        embeds: [embed],
+        allowedMentions: { repliedUser: false },
+      });
+    } catch (e) {
+      console.error(e);
     }
-
+  }
 };

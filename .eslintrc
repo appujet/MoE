@@ -7,7 +7,6 @@
     "parserOptions": {
         "ecmaVersion": 2019
     },
-   
     "rules": {
         "brace-style": [
             "off",
