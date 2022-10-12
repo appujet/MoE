@@ -61,7 +61,7 @@ class Dispatcher extends EventEmitter {
       )
       .on('end', (data) => {
         this.manager.emit('trackEnd', this.player, this.current, this.channel, this, data);
-        if (!this.queue.length) this.manager.emit('queueEnd', this.player, data);
+        if (!this.queue.length) this.manager.emit('queueEnd', this.player, this.current, this.channel, this, data);
       })
       .on('stuck', (data) =>
         this.manager.emit('trackStuck', this.player, this.current, data),

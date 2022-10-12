@@ -3,7 +3,7 @@ const Event = require('@structures/Event');
 const { TextChannel } = require('discord.js');
 const { Player } = require('shoukaku');
 
-module.exports = class TrackEnd extends Event {
+module.exports = class QueueEnd extends Event {
     constructor(...args) {
         super(...args);
     }
@@ -15,11 +15,7 @@ module.exports = class TrackEnd extends Event {
      * @param {Dispatcher} dispatcher
      */
     async run(player, track, channel, dispatcher) {
-        if (dispatcher.loop === 'repeat') dispatcher.queue.unshift(track);
-        if (dispatcher.loop === 'queue') dispatcher.queue.push(track);
-        for (let i = 0; i < dispatcher.matchedTracks.length; i++) {
-            dispatcher.matchedTracks.pop();
-        }
-        dispatcher.play();
+        dispatcher.destroy();
+        if (!dispatcher.queue.length) return await channel.send({ embeds: [this.client.embed().setDescription('No more tracks have been added in queue so i left the voice channel')] });
     }
 };
