@@ -60,8 +60,8 @@ class Dispatcher extends EventEmitter {
         this.manager.emit('trackStart', this.player, this.current, this.channel, this.matchedTracks, this, data),
       )
       .on('end', (data) => {
-        this.manager.emit('trackEnd', this.player, this.current, this.channel, this, data);
         if (!this.queue.length) this.manager.emit('queueEnd', this.player, this.current, this.channel, this, data);
+        this.manager.emit('trackEnd', this.player, this.current, this.channel, this, data);
       })
       .on('stuck', (data) =>
         this.manager.emit('trackStuck', this.player, this.current, data),
@@ -108,7 +108,7 @@ class Dispatcher extends EventEmitter {
       return;
     }
     this.current = this.queue.shift();
-    this.player.playTrack({ track: this.current?.track });
+    this.player.playTrack({ track: this.current.track });
   }
 
   destroy() {
