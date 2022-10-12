@@ -75,7 +75,7 @@ module.exports = class Alpha extends Client {
    * @param {import('discord.js').APISelectMenuComponent} data
    * @returns {SelectMenuBuilder}
    */
-  manu(data) {
+  menu(data) {
     return new SelectMenuBuilder(data);
   }
   /**

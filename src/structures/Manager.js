@@ -89,7 +89,7 @@ class Manager extends EventEmitter {
 			deaf: true,
 		});
 
-		const dispatcher = new Dispatcher(this.client, guild, channel, player);
+		const dispatcher = new Dispatcher(this.client, guild, channel, player, member.user);
 
 		this.emit('playerCreate', dispatcher.player);
 
@@ -103,7 +103,7 @@ class Manager extends EventEmitter {
 	 * @param {string} query
 	 * @returns {Promise<import('shoukaku').LavalinkResponse>}
 	 */
-	async search(query) {
+	async search(query, guildId) {
 		const node = await this.shoukaku.getNode();
 
 		/**
@@ -112,6 +112,11 @@ class Manager extends EventEmitter {
 		let result;
 		try {
 			result = await node.rest.resolve(query);
+			const player = this.getPlayer(guildId);
+			if (!player) return;
+			for (const track of result.tracks.slice(0, 11)) {
+				player.matchedTracks.push(track);
+			}
 		} catch (err) {
 			return null;
 		}

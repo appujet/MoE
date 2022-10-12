@@ -53,11 +53,14 @@ module.exports = class Play extends Command {
    * @param {string[] | CommandInteractionOptionResolver} args
    */
   async run(ctx, args) {
+    if (ctx.isInteraction) {
+      await ctx.sendDeferMessage();
+      await ctx.deleteMessage();
+    }
     if (!args.length)
       return await ctx.channel.send({
         embeds: [
-          this.client
-            .embed()
+          this.client.embed()
             .setDescription('Please provide an URL or search query'),
         ],
       });
@@ -67,12 +70,8 @@ module.exports = class Play extends Command {
      */
     const query = args.length > 1 ? args.join(' ') : args[0];
     const isURL = this.checkURL(query);
-    const result = await this.client.manager.search(isURL ? query : `ytsearch:${query}`);
-    const dispatcher = await this.client.manager.spawn(
-      ctx.guild,
-      ctx.member,
-      ctx.channel,
-    );
+    const dispatcher = await this.client.manager.spawn(ctx.guild, ctx.member, ctx.channel);
+    const result = await this.client.manager.search(isURL ? query : `ytsearch:${query}`, ctx.guild.id);
     const embed = this.client.embed();
     const row = this.client.row;
 
@@ -264,6 +263,6 @@ module.exports = class Play extends Command {
             },
           ],
         }).catch((err) => this.client.logger.error(err));
-      });
-    }
-  };
+    });
+  }
+};

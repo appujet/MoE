@@ -11,7 +11,7 @@ signale.config({
 
 const manager = new Manager('./src/moe.js', {
   mode: 'process',
-  shardsPerClusters: 4,
+  shardsPerClusters: 0,
   token,
   totalClusters: 'auto',
   totalShards: 'auto',

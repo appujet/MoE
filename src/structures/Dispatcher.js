@@ -1,4 +1,4 @@
-const { Guild, TextChannel } = require('discord.js');
+const { Guild, TextChannel, User } = require('discord.js');
 const Moe = require('@structures/Client');
 const { Player } = require('shoukaku');
 const { EventEmitter } = require('events');
@@ -10,8 +10,9 @@ class Dispatcher extends EventEmitter {
    * @param {Guild} guild
    * @param {TextChannel} channel
    * @param {Player} player
+   * @param {User} user
    */
-  constructor(client, guild, channel, player) {
+  constructor(client, guild, channel, player, user) {
     super();
     /**
      * @type {Moe}
@@ -45,13 +46,21 @@ class Dispatcher extends EventEmitter {
      * @type {'off'|'repeat'|'queue'}
      */
     this.loop = 'off';
+    /**
+     * @type {import('shoukaku').Track[]}
+     */
+    this.matchedTracks = [];
+    /**
+     * @type {User}
+     */
+    this.requester = user;
 
     this.player
       .on('start', (data) =>
-        this.manager.emit('trackStart', this.player, this.current, this.channel, data),
+        this.manager.emit('trackStart', this.player, this.current, this.channel, this.matchedTracks, this, data),
       )
       .on('end', (data) => {
-        this.manager.emit('trackEnd', this.player, this.current, data);
+        this.manager.emit('trackEnd', this.player, this.current, this.channel, this, data);
         if (!this.queue.length) this.manager.emit('queueEnd', this.player, data);
       })
       .on('stuck', (data) =>
@@ -99,7 +108,7 @@ class Dispatcher extends EventEmitter {
       return;
     }
     this.current = this.queue.shift();
-    this.player.playTrack({ track: this.current.track });
+    this.player.playTrack({ track: this.current?.track });
   }
 
   destroy() {

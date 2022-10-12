@@ -94,6 +94,7 @@
         "space-unary-ops": "error",
         "spaced-comment": "error",
         "yoda": "error",
-        "no-case-declarations" : "off"
+        "no-case-declarations" : "off",
+        "no-unsafe-option-chaining": "off"
     }
 }
