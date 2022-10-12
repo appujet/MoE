@@ -121,24 +121,24 @@ module.exports = class Alpha extends Client {
           ++i;
         }
         this.logger.event(`Successfully loaded [/] command ${i}.`);
-
-        const rest = new REST({ version: '10' }).setToken(
-          this.user ? this.token : require('@src/config').token,
-        );
-
-        rest
-          .put(
-            Routes.applicationCommands(
-              this.user ? this.user.id : require('@src/config').clientId,
-            ),
-            { body: data },
-          )
-          .then(() =>
-            this.logger.info('Successfully reloaded application (/) commands.'),
-          )
-          .catch((e) => this.logger.error(e.name, e.message));
       });
     });
+
+    const rest = new REST({ version: '10' }).setToken(
+      this.user ? this.token : require('@src/config').token,
+    );
+
+    rest
+      .put(
+        Routes.applicationCommands(
+          this.user ? this.user.id : require('@src/config').clientId,
+        ),
+        { body: data },
+      )
+      .then(() =>
+        this.logger.info('Successfully reloaded application (/) commands.'),
+      )
+      .catch((e) => this.logger.error(e.name, e.message));
   }
   loadEvents() {
     if (this.cluster.id !== 0) return;
