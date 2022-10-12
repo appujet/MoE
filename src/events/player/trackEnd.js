@@ -17,9 +17,6 @@ module.exports = class TrackEnd extends Event {
     async run(player, track, channel, dispatcher) {
         if (dispatcher.loop === 'repeat') dispatcher.queue.unshift(track);
         if (dispatcher.loop === 'queue') dispatcher.queue.push(track);
-        for (let i = 0; i < dispatcher.matchedTracks.length; i++) {
-            dispatcher.matchedTracks.pop();
-        }
-        dispatcher.play();
+        await dispatcher.play();
     }
 };

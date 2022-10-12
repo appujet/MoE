@@ -24,7 +24,7 @@ module.exports = class TrackStart extends Event {
         `${track.info.title} - [\`${formatDuration(track.info.length, true)}\`]`,
       );
 
-    const matchedResults = matchedTracks.filter((v) => v.info.uri !== track.info.uri).map((v) => {
+    const matchedResults = matchedTracks.filter((v) => !Array.isArray(v) && v.info.uri !== track.info.uri).map((v) => {
       return {
         label: v.info.title,
         value: v.info.uri,

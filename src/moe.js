@@ -14,5 +14,5 @@ process.on('unhandledRejection', (e) => {
     client.logger.error(e);
 });
 process.on('warning', (e) => {
-    client.logger.error(e);
+    client.logger.warn(e);
 });
