@@ -2,15 +2,18 @@ const { Collection, Guild, GuildMember, TextChannel } = require('discord.js');
 const { Shoukaku, Connectors, Node } = require('shoukaku');
 const Moe = require('@structures/Client');
 const Dispatcher = require('@structures/Dispatcher');
-class Manager {
+const { EventEmitter } = require('events');
+
+class Manager extends EventEmitter {
 	/**
-      *
-      * @param {Moe} client
-      */
+	 *
+	 * @param {Moe} client
+	 */
 	constructor(client) {
+		super();
 		/**
-		* @type {Moe}
-		*/
+		 * @type {Moe}
+		 */
 		this.client = client;
 		/**
 		 * @type {Shoukaku}
@@ -32,43 +35,47 @@ class Manager {
 		 */
 		this.players = new Collection();
 
-		this.shoukaku.on('ready', (name, resumed) => {
-			this.client.logger.ready('Shoukaku Handler', `LAVALINK => [STATUS] ${name} successfully connected.`, `This connection is ${resumed ? 'resumed' : 'a new connection'}`);
-		});
+		this.shoukaku.on('ready', (name, resumed) =>
+			this.emit(
+				resumed ? 'nodeReconnect' : 'nodeConnect',
+				this.shoukaku.getNode(name),
+			),
+		);
 
-		this.shoukaku.on('error', (name, error) => {
-			this.client.logger.error(`LAVALINK => ${name}: Error Caught.`, error);
-		});
+		this.shoukaku.on('error', (name, error) =>
+			this.emit('nodeError', this.shoukaku.getNode(name), error),
+		);
 
 		this.shoukaku.on('close', (name, code, reason) =>
-			this.client.logger.warn('Shoukaku Handler', `LAVALINK => ${name}: Closed, Code ${code}`, `Reason ${reason || 'No reason'}.`),
+			this.emit('nodeDestroy', this.shoukaku.getNode(name), code, reason),
 		);
 
 		this.shoukaku.on('disconnect', (name, players, moved) => {
-			this.client.logger.info('Shoukaku Handler', `LAVALINK => ${name}: Disconnected`, moved ? 'players have been moved' : 'players have been disconnected');
+			if (moved) this.emit('playerMove', players);
+			this.emit('nodeDisconnect', this.shoukaku.getNode(name), players);
 		});
 
 		this.shoukaku.on('debug', (name, reason) =>
-			this.client.logger.info('Shoukaku Handler', `LAVALINK => ${name}`, reason || 'No reason'),
+			this.emit('nodeRaw', name, reason),
 		);
 	}
- /**
-   *
-   * @param {string} guildId Guild ID
-   * @returns {Dispatcher}
-   */
-getPlayer(guildId) {
+	/**
+	 *
+	 * @param {string} guildId Guild ID
+	 * @returns {Dispatcher}
+	 */
+	getPlayer(guildId) {
 		return this.players.get(guildId);
 	}
- /**
-   *
-   * @param {Guild} guild Guild
-   * @param {GuildMember} member Member
-   * @param {TextChannel} channel Channel
-   * @param {Node} givenNode Node
-   * @returns {Promise<Dispatcher>}
-   */
-async spawn(guild, member, channel, givenNode) {
+	/**
+	 *
+	 * @param {Guild} guild Guild
+	 * @param {GuildMember} member Member
+	 * @param {TextChannel} channel Channel
+	 * @param {Node} givenNode Node
+	 * @returns {Promise<Dispatcher>}
+	 */
+	async spawn(guild, member, channel, givenNode) {
 		const existing = this.getPlayer(guild.id);
 
 		if (existing) return existing;
@@ -82,7 +89,9 @@ async spawn(guild, member, channel, givenNode) {
 			deaf: true,
 		});
 
-		const dispatcher = new Dispatcher(this.client, guild, channel, player);
+		const dispatcher = new Dispatcher(this.client, guild, channel, player, member.user);
+
+		this.emit('playerCreate', dispatcher.player);
 
 		this.players.set(guild.id, dispatcher);
 
@@ -92,22 +101,28 @@ async spawn(guild, member, channel, givenNode) {
 	/**
 	 *
 	 * @param {string} query
-	 * @returns {any}
+	 * @returns {Promise<import('shoukaku').LavalinkResponse>}
 	 */
-	async search(query) {
+	async search(query, guildId) {
 		const node = await this.shoukaku.getNode();
 
+		/**
+		 * @type {import('shoukaku').LavalinkResponse}
+		 */
 		let result;
 		try {
 			result = await node.rest.resolve(query);
+			const player = this.getPlayer(guildId);
+			if (!player) return;
+			for (const track of result.tracks.slice(0, 11)) {
+				player.matchedTracks.push(track);
+			}
 		} catch (err) {
-			this.client.logger.log('Shoukaku Handler', `LAVALINK => Error while searching for ${query}`);
 			return null;
 		}
 
 		return result;
 	}
-
 }
 
 module.exports = Manager;

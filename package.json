@@ -28,9 +28,12 @@
   "author": "blacky",
   "license": "ISC",
   "dependencies": {
+    "@napi-rs/canvas": "^0.1.29",
     "discord-hybrid-sharding": "^1.7.4",
     "discord.js": "^14.5.0",
     "module-alias": "^2.2.2",
+    "moment": "^2.29.4",
+    "moment-duration-format": "^2.3.2",
     "mongoose": "^6.6.4",
     "shoukaku": "^3.2.0",
     "signale": "^1.4.0"
