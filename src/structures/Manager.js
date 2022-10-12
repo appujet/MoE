@@ -103,7 +103,7 @@ class Manager extends EventEmitter {
 	 * @param {string} query
 	 * @returns {Promise<import('shoukaku').LavalinkResponse>}
 	 */
-	async search(query, guildId) {
+	async search(query) {
 		const node = await this.shoukaku.getNode();
 
 		/**
@@ -112,11 +112,6 @@ class Manager extends EventEmitter {
 		let result;
 		try {
 			result = await node.rest.resolve(query);
-			const player = this.getPlayer(guildId);
-			if (!player) return;
-			for (const track of result.tracks.slice(0, 11)) {
-				player.matchedTracks.push(track);
-			}
 		} catch (err) {
 			return null;
 		}

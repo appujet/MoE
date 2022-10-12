@@ -71,7 +71,7 @@ module.exports = class Play extends Command {
     const query = args.length > 1 ? args.join(' ') : args[0];
     const isURL = this.checkURL(query);
     const dispatcher = await this.client.manager.spawn(ctx.guild, ctx.member, ctx.channel);
-    const result = await this.client.manager.search(isURL ? query : `ytsearch:${query}`, ctx.guild.id);
+    const result = await this.client.manager.search(isURL ? query : `ytsearch:${query}`);
     const embed = this.client.embed();
     const row = this.client.row;
 
@@ -144,7 +144,7 @@ module.exports = class Play extends Command {
         break;
       case 'TRACK_LOADED':
         dispatcher.queue.push(result.tracks[0]);
-        dispatcher.check();
+        await dispatcher.check();
         await ctx.channel.send({
           embeds: [
             embed
@@ -157,7 +157,7 @@ module.exports = class Play extends Command {
         break;
       case 'PLAYLIST_LOADED':
         dispatcher.queue.push(...result.tracks);
-        dispatcher.check();
+        await dispatcher.check();
         await ctx.channel.send({
           embeds: [
             embed
@@ -214,7 +214,7 @@ module.exports = class Play extends Command {
             .slice(0, 5)
             .filter((value) => value.info.uri === i.customId)[0];
           dispatcher.queue.push(find);
-          dispatcher.check();
+          await dispatcher.check();
           await msg.edit({
             embeds: [
               {

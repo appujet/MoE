@@ -96,18 +96,15 @@ class Dispatcher extends EventEmitter {
     return this.manager.players.has(this.guild.id);
   }
 
-  play() {
-    if (this.introId && this.current === this.introId) {
-      this.player.playTrack({
-        track: this.current,
-      });
-      return;
-    }
+  async play() {
     if (!this.exists || (!this.queue.length && !this.current)) {
       this.destroy();
       return;
     }
-    this.current = this.queue.shift();
+    this.current = this.queue.length !== 0 ? this.queue.shift() : this.queue[0];
+    if (this.matchedTracks.length !== 0) this.matchedTracks = [];
+    const search = await this.manager.search(`ytsearch:${this.current.info.title}`);
+    this.matchedTracks.push(...search.tracks.slice(0, 11));
     this.player.playTrack({ track: this.current.track });
   }
 
@@ -131,7 +128,7 @@ class Dispatcher extends EventEmitter {
       : null;
   }
 
-  check() {
+  async check() {
     if (this.queue.length && !this.current && !this.player.paused) {
       this.play();
     }
