@@ -1,7 +1,12 @@
 /* eslint-disable no-empty-function */
-const { Message, CommandInteraction, EmbedBuilder, User, BaseChannel, Guild, GuildMember, Interaction } = require('discord.js');
+const { Message, CommandInteraction, EmbedBuilder, User, Guild, GuildMember, CommandInteractionOptionResolver, TextChannel, VoiceChannel, ThreadChannel, DMChannel } = require('discord.js');
 const { paginate } = require('@handlers/functions');
 module.exports = class Context {
+    /**
+     *
+     * @param {Message | CommandInteraction} ctx
+     * @param {string[] | CommandInteractionOptionResolver} args
+     */
     constructor(ctx, args) {
         /**
          * @type {boolean}
@@ -16,7 +21,7 @@ module.exports = class Context {
          */
         this.setArgs(args);
         /**
-         * @type {Interaction}
+         * @type {CommandInteraction}
          */
         this.interaction = this.isInteraction ? ctx : null;
         /**
@@ -48,7 +53,7 @@ module.exports = class Context {
          */
         this.author = ctx instanceof Message ? ctx.author : ctx.user;
         /**
-         * @type {BaseChannel}
+         * @type {TextChannel | VoiceChannel | ThreadChannel | DMChannel}
          */
         this.channel = ctx.channel;
         /**
