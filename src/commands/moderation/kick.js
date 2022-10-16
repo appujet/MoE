@@ -49,7 +49,10 @@ module.exports = class Kick extends Command {
         let user;
         if (ctx.interaction) user = ctx.interaction.options.getUser('user');
         else user = ctx.message.mentions.members.first() || ctx.guild.members.cache.get(args[0]);
-
+        let reason;
+        if(ctx.interaction) reason = ctx.interaction.options.getString("reason") ||'No reason provided.';
+        else reason = args.slice(1).join(" ") || 'No reason provided.' ;
+        
         if (!user) return await ctx.sendMessage('Please provide a valid user.');
         if (user.id === ctx.author.id) return await ctx.sendMessage('You can\'t kick yourself.');
         if (user.id === ctx.client.user.id) return await ctx.sendMessage('You can\'t kick me.');
@@ -59,7 +62,6 @@ module.exports = class Kick extends Command {
         if (user.id === this.client.user.id) return await ctx.sendMessage('Please don\'t kick me!');
 
         if (user.kickable) {
-            const reason = args.slice(1).join(" ") || this.interaction.options.getString("reason") || 'No reason provided.';
             await user.kick({ reason: reason });
             return await ctx.sendMessage(`Successfully kicked \`${user.user.tag}\`.`);
         } else {
