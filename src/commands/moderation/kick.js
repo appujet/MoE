@@ -59,7 +59,7 @@ module.exports = class Kick extends Command {
         if (user.id === this.client.user.id) return await ctx.sendMessage('Please don\'t kick me!');
 
         if (user.kickable) {
-            const reason = args.slice(1).join(" ") || 'No reason provided.';
+            const reason = args.slice(1).join(" ") || this.interaction.options.getString("reason") || 'No reason provided.';
             await user.kick({ reason: reason });
             return await ctx.sendMessage(`Successfully kicked \`${user.user.tag}\`.`);
         } else {
