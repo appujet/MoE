@@ -2,7 +2,7 @@
   <br>
   <a href="https://github.com/brblacky/MoE"><img src="https://media.discordapp.net/attachments/979364157541462066/1056171221231865856/2c19d32ba59ee9da87cc1e1b62d6a8a5-1.png" height="200" alt="Alpha"></a>
   <br>
-  Alpha
+  MoE
   <br>
 </h1>
 
